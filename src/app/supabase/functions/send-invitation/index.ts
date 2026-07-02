@@ -1,3 +1,5 @@
+/// <reference lib="deno.ns" />
+
 // @ts-ignore
 import { serve } from "https://deno.land/std@0.224.0/http/server.ts";
 
@@ -22,10 +24,40 @@ serve(async (req: Request) => {
 
   try {
     const body = await req.json();
+    const email = body?.email;
+    const name = body?.name || "Guest";
 
-    // your logic here
-    
-    const { email, name } = await req.json();
+    if (!email || typeof email !== "string") {
+      return new Response(
+        JSON.stringify({
+          success: false,
+          error: "A valid email address is required.",
+        }),
+        {
+          status: 400,
+          headers: {
+            ...corsHeaders,
+            "Content-Type": "application/json",
+          },
+        }
+      );
+    }
+
+    if (!Deno.env.get("RESEND_API_KEY")) {
+      return new Response(
+        JSON.stringify({
+          success: false,
+          error: "RESEND_API_KEY is not configured for this edge function.",
+        }),
+        {
+          status: 500,
+          headers: {
+            ...corsHeaders,
+            "Content-Type": "application/json",
+          },
+        }
+      );
+    }
 
     const invitationUrl = "https://rogiealyssawedding.vercel.app/";
 

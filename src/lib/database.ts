@@ -108,7 +108,7 @@ export async function sendInvitationEmail(email: string, name: string): Promise<
   try {
     console.log(`📧 Attempting to send invitation to ${email}...`);
 
-    const { data, error } = await supabase.functions.invoke("send-wedding-invitation", {
+    const { data, error } = await supabase.functions.invoke("send-invitation", {
       body: {
         email,
         name,
@@ -155,3 +155,4 @@ export async function markAsInvited(id: number, email: string, name: string): Pr
     return { success: false, error: message };
   }
 }
+
