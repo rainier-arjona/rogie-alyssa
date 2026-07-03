@@ -7,9 +7,8 @@ import {
   CheckCircle, XCircle, Clock3, LayoutDashboard, LogOut, Eye,
   Mail, UserCheck, UserX, RefreshCw, User,
 } from "lucide-react";
-import { fetchRsvps, createRsvp, updateRsvpStatus, deleteRsvp as deleteRsvpDb, markAsInvited } from "../lib/database";
+import { fetchRsvps, createRsvp, updateRsvpStatus, updateRsvpAttending, deleteRsvp as deleteRsvpDb, markAsInvited } from "../lib/database";
 
-import { supabase } from "../lib/supabase.ts"; // adjust path if needed
 // ─── Constants ────────────────────────────────────────────────────────────────
 
 const WEDDING_DATE = new Date("2026-11-28T16:00:00");
@@ -381,7 +380,7 @@ function OpeningScreen({ onOpen }: { onOpen: () => void }) {
     
         <motion.p initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 1.1, duration: 0.6 }} className="text-lg mb-2" style={{ fontFamily: "'Cormorant Garamond', serif", color: "#4275C8", letterSpacing: "0.2em" }}>&amp;</motion.p>
         <motion.h1 initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 1, duration: 0.9 }} className="text-5xl mb-2" style={{ fontFamily: "'Great Vibes', cursive", color: "#1F2D4C" }}>{BRIDE}</motion.h1>
-        <motion.p initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 1.3, duration: 0.6 }} className="text-sm mb-8 tracking-wider" style={{ fontFamily: "'Montserrat', sans-serif", color: "#6B7C9D" }}>{DATE_DISPLAY}</motion.p>
+        
         <motion.div initial={{ scaleX: 0 }} animate={{ scaleX: 1 }} transition={{ delay: 1.35, duration: 0.8 }} className="h-px w-16 mx-auto mb-8" style={{ background: "linear-gradient(90deg, transparent, #86A4E4, transparent)" }} />
         <motion.button initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 1.5, duration: 0.7 }} whileHover={{ scale: 1.04 }} whileTap={{ scale: 0.97 }} onClick={onOpen} className="px-10 py-3 rounded-full text-sm uppercase transition-all" style={{ fontFamily: "'Montserrat', sans-serif", background: "linear-gradient(135deg, #4275C8, #A8C7F1)", color: "white", boxShadow: "0 4px 20px rgba(66,117,200,0.4)", letterSpacing: "0.15em" }}>
           Open Invitation
@@ -649,7 +648,7 @@ function AdminDashboard({ rsvps, onUpdate, onDelete, onInvite, onClose }: {
           </div>
           <div>
             <p className="text-sm font-semibold" style={{ color: "#1F2D4C" }}>Admin Dashboard</p>
-            <p className="text-xs" style={{ color: "#6B7C9D" }}>Rogimer &amp; Alyssa Camille — November 28, 2026</p>
+            
           </div>
         </div>
         <div className="flex items-center gap-3">
@@ -861,8 +860,16 @@ export default function App() {
     }
   };
 
+  const mapAttendingToStatus = (attending: string): RsvpStatus => {
+    if (attending === "Joyfully accepts") return "confirmed";
+    if (attending === "Regretfully declines") return "declined";
+    return "pending";
+  };
+
   const addRsvp = async (entry: Omit<RsvpEntry, "id" | "status" | "submittedAt">) => {
     const normalizedEmail = entry.email.trim().toLowerCase();
+    const status = mapAttendingToStatus(entry.attending);
+
     try {
       const existing = rsvps.find((r) => r.email.trim().toLowerCase() === normalizedEmail);
       
@@ -873,18 +880,27 @@ export default function App() {
         guests: entry.guests || "1",
         meal: entry.meal || "",
         message: entry.message || "",
-        status: "pending" as RsvpStatus,
+        status,
         submitted_at: new Date().toISOString(),
         invited: entry.invited || false,
       };
 
       if (existing) {
-        // Update existing
-        await updateRsvpStatus(existing.id, "pending");
+        // Update existing entry attending and status based on choice
+        await updateRsvpAttending(existing.id, entry.attending, status);
         setRsvps((prev) =>
           prev.map((r) =>
             r.email.trim().toLowerCase() === normalizedEmail
-              ? { ...r, ...entry, status: "pending", submittedAt: new Date().toISOString().slice(0, 10) }
+              ? {
+                  ...r,
+                  name: entry.name || r.name,
+                  attending: entry.attending,
+                  guests: entry.guests || r.guests,
+                  meal: entry.meal || r.meal,
+                  message: entry.message || r.message,
+                  status,
+                  submittedAt: new Date().toISOString().slice(0, 10),
+                }
               : r
           )
         );
@@ -1452,68 +1468,33 @@ const inviteGuest = async (email: string, name?: string) => {
       />
 
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-10 relative z-10">
-        {PRINCIPAL_SPONSORS.map((s, i) => (
-          <motion.div
-            key={i}
-            initial={{ opacity: 0, y: 15 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{
-              duration: 0.6,
-              delay: i * 0.08,
-            }}
-            whileHover={{
-              y: -5,
-              scale: 1.02,
-            }}
-            className="relative flex flex-col items-center text-center"
-          >
-            {/* Icon */}
-            <div
-              className="mb-4 h-12 w-12 rounded-full flex items-center justify-center"
-              style={{
-                background:
-                  "linear-gradient(135deg, rgba(108,143,184,0.15), rgba(220,235,250,0.20))",
-                border: "1px solid rgba(156,180,205,0.20)",
-                boxShadow:
-                  "0 8px 20px rgba(108,143,184,0.10)",
-                backdropFilter: "blur(10px)",
-              }}
-            >
-              <Heart
-                size={18}
-                style={{
-                  color: "#6C8FB8",
-                }}
-              />
-            </div>
-
-            {/* Names */}
-            <p
-              className="text-xl mb-2"
-              style={{
-                fontFamily: "'Cormorant Garamond', serif",
-                color: "#1B3554",
-                lineHeight: 1.4,
-              }}
-            >
+        <motion.div
+          initial={{ opacity: 0, y: 15 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.6 }}
+          className="space-y-4 text-center"
+        >
+          {PRINCIPAL_SPONSORS.map((s, i) => (
+            <p key={`mr-${i}`} className="text-xl" style={{ fontFamily: "'Cormorant Garamond', serif", color: "#1B3554", lineHeight: 1.4 }}>
               {s.mr}
             </p>
+          ))}
+        </motion.div>
 
-            <p
-              className="text-xl"
-              style={{
-                fontFamily: "'Cormorant Garamond', serif",
-                color: "#1B3554",
-                lineHeight: 1.4,
-              }}
-            >
+        <motion.div
+          initial={{ opacity: 0, y: 15 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.6, delay: 0.1 }}
+          className="space-y-4 text-center"
+        >
+          {PRINCIPAL_SPONSORS.map((s, i) => (
+            <p key={`mrs-${i}`} className="text-xl" style={{ fontFamily: "'Cormorant Garamond', serif", color: "#1B3554", lineHeight: 1.4 }}>
               {s.mrs}
             </p>
-
-          
-          </motion.div>
-        ))}
+          ))}
+        </motion.div>
       </div>
 
       {/* Footer */}
@@ -1552,11 +1533,7 @@ const inviteGuest = async (email: string, name?: string) => {
 
     {/* Secondary Sponsors */}
     <div className="space-y-14">
-      <div className="text-center">
-        <div className="inline-flex items-center justify-center w-10 h-10 rounded-full mx-auto" style={{ background: "rgba(66,117,200,0.12)" }}>
-          <Heart size={18} style={{ color: "#4275C8" }} />
-        </div>
-      </div>
+      <div className="text-center" />
 
       <div className="space-y-8">
         <div className="grid grid-cols-1 gap-6 justify-items-center">
@@ -1564,17 +1541,16 @@ const inviteGuest = async (email: string, name?: string) => {
             <GlassCard
               className="w-full p-6 text-center relative transition-transform duration-300 hover:-translate-y-1 hover:shadow-xl"
               style={{
-                border: "1px solid rgba(66,117,200,0.18)",
-                background: "linear-gradient(135deg, rgba(233,243,255,0.97), rgba(245,250,255,0.96))",
+                background: "linear-gradient(145deg, #FFFFFF 0%, #EEF4FA 45%, #DCE7F3 100%)",
+                border: "1px solid rgba(213,224,236,0.9)",
+                backdropFilter: "blur(24px)",
+                boxShadow: "0 20px 60px rgba(108,143,184,0.12), inset 0 1px 0 rgba(255,255,255,0.8)",
               }}
             >
-              <div className="absolute -top-5 left-1/2 -translate-x-1/2 w-12 h-12 rounded-full flex items-center justify-center" style={{ background: "rgba(66,117,200,0.16)" }}>
-                <BowTieIcon />
-              </div>
-              <p className="text-xs tracking-widest uppercase mb-3" style={{ fontFamily: "'Montserrat', sans-serif", color: "#6B7C9D" }}>
+              <p className="text-xs tracking-widest uppercase mb-3" style={{ fontFamily: "'Montserrat', sans-serif", color: "#6C8FB8" }}>
                 Best Man
               </p>
-              <p className="text-xl font-medium" style={{ fontFamily: "'Cormorant Garamond', serif", color: "#1F2D4C", lineHeight: 1.25 }}>
+              <p className="text-xl font-medium" style={{ fontFamily: "'Cormorant Garamond', serif", color: "#1B3554", lineHeight: 1.25 }}>
                 {WEDDING_PARTY.find((p) => p.role === "Best Man")?.name}
               </p>
             </GlassCard>
@@ -1585,17 +1561,16 @@ const inviteGuest = async (email: string, name?: string) => {
               <GlassCard
                 className="w-full p-6 text-center relative transition-transform duration-300 hover:-translate-y-1 hover:shadow-xl"
                 style={{
-                  border: "1px solid rgba(66,117,200,0.18)",
-                  background: "linear-gradient(135deg, rgba(233,243,255,0.97), rgba(245,250,255,0.96))",
+                  background: "linear-gradient(145deg, #FFFFFF 0%, #EEF4FA 45%, #DCE7F3 100%)",
+                  border: "1px solid rgba(213,224,236,0.9)",
+                  backdropFilter: "blur(24px)",
+                  boxShadow: "0 20px 60px rgba(108,143,184,0.12), inset 0 1px 0 rgba(255,255,255,0.8)",
                 }}
               >
-                <div className="absolute -top-4 left-4 w-10 h-10 rounded-full flex items-center justify-center" style={{ background: "rgba(66,117,200,0.12)" }}>
-                  <CrownIcon />
-                </div>
-                <p className="text-xs tracking-widest uppercase mb-3" style={{ fontFamily: "'Montserrat', sans-serif", color: "#6B7C9D" }}>
+                <p className="text-xs tracking-widest uppercase mb-3" style={{ fontFamily: "'Montserrat', sans-serif", color: "#6C8FB8" }}>
                   Maid of Honor
                 </p>
-                <p className="text-xl font-medium" style={{ fontFamily: "'Cormorant Garamond', serif", color: "#1F2D4C", lineHeight: 1.25 }}>
+                <p className="text-xl font-medium" style={{ fontFamily: "'Cormorant Garamond', serif", color: "#1B3554", lineHeight: 1.25 }}>
                   {WEDDING_PARTY.find((p) => p.role === "Maid of Honor")?.name}
                 </p>
               </GlassCard>
@@ -1605,17 +1580,16 @@ const inviteGuest = async (email: string, name?: string) => {
               <GlassCard
                 className="w-full p-6 text-center relative transition-transform duration-300 hover:-translate-y-1 hover:shadow-xl"
                 style={{
-                  border: "1px solid rgba(66,117,200,0.18)",
-                  background: "linear-gradient(135deg, rgba(233,243,255,0.97), rgba(245,250,255,0.96))",
+                  background: "linear-gradient(145deg, #FFFFFF 0%, #EEF4FA 45%, #DCE7F3 100%)",
+                  border: "1px solid rgba(213,224,236,0.9)",
+                  backdropFilter: "blur(24px)",
+                  boxShadow: "0 20px 60px rgba(108,143,184,0.12), inset 0 1px 0 rgba(255,255,255,0.8)",
                 }}
               >
-                <div className="absolute -top-4 right-4 w-10 h-10 rounded-full flex items-center justify-center" style={{ background: "rgba(66,117,200,0.12)" }}>
-                  <RingIcon />
-                </div>
-                <p className="text-xs tracking-widest uppercase mb-3" style={{ fontFamily: "'Montserrat', sans-serif", color: "#6B7C9D" }}>
+                <p className="text-xs tracking-widest uppercase mb-3" style={{ fontFamily: "'Montserrat', sans-serif", color: "#6C8FB8" }}>
                   Matron of Honor
                 </p>
-                <p className="text-xl font-medium" style={{ fontFamily: "'Cormorant Garamond', serif", color: "#1F2D4C", lineHeight: 1.25 }}>
+                <p className="text-xl font-medium" style={{ fontFamily: "'Cormorant Garamond', serif", color: "#1B3554", lineHeight: 1.25 }}>
                   {WEDDING_PARTY.find((p) => p.role === "Matron of Honor")?.name}
                 </p>
               </GlassCard>
@@ -1626,17 +1600,16 @@ const inviteGuest = async (email: string, name?: string) => {
             <GlassCard
               className="w-full p-6 text-center relative transition-transform duration-300 hover:-translate-y-1 hover:shadow-xl"
               style={{
-                border: "1px solid rgba(66,117,200,0.18)",
-                background: "linear-gradient(135deg, rgba(233,243,255,0.97), rgba(245,250,255,0.96))",
+                background: "linear-gradient(145deg, #FFFFFF 0%, #EEF4FA 45%, #DCE7F3 100%)",
+                border: "1px solid rgba(213,224,236,0.9)",
+                backdropFilter: "blur(24px)",
+                boxShadow: "0 20px 60px rgba(108,143,184,0.12), inset 0 1px 0 rgba(255,255,255,0.8)",
               }}
             >
-              <div className="absolute -top-4 left-1/2 -translate-x-1/2 w-10 h-10 rounded-full flex items-center justify-center" style={{ background: "rgba(66,117,200,0.12)" }}>
-                <FlowerIcon />
-              </div>
-              <p className="text-xs tracking-widest uppercase mb-3" style={{ fontFamily: "'Montserrat', sans-serif", color: "#6B7C9D" }}>
+              <p className="text-xs tracking-widest uppercase mb-3" style={{ fontFamily: "'Montserrat', sans-serif", color: "#6C8FB8" }}>
                 Junior Bridesmaid
               </p>
-              <p className="text-xl font-medium" style={{ fontFamily: "'Cormorant Garamond', serif", color: "#1F2D4C", lineHeight: 1.25 }}>
+              <p className="text-xl font-medium" style={{ fontFamily: "'Cormorant Garamond', serif", color: "#1B3554", lineHeight: 1.25 }}>
                 {WEDDING_PARTY.find((p) => p.role === "Junior Bridesmaid")?.name}
               </p>
             </GlassCard>
@@ -1646,17 +1619,16 @@ const inviteGuest = async (email: string, name?: string) => {
             <GlassCard
               className="w-full p-6 text-center relative transition-transform duration-300 hover:-translate-y-1 hover:shadow-xl"
               style={{
-                border: "1px solid rgba(66,117,200,0.18)",
-                background: "linear-gradient(135deg, rgba(233,243,255,0.97), rgba(245,250,255,0.96))",
+                background: "linear-gradient(145deg, #FFFFFF 0%, #EEF4FA 45%, #DCE7F3 100%)",
+                border: "1px solid rgba(213,224,236,0.9)",
+                backdropFilter: "blur(24px)",
+                boxShadow: "0 20px 60px rgba(108,143,184,0.12), inset 0 1px 0 rgba(255,255,255,0.8)",
               }}
             >
-              <div className="absolute -top-4 left-1/2 -translate-x-1/2 w-10 h-10 rounded-full flex items-center justify-center" style={{ background: "rgba(66,117,200,0.12)" }}>
-                <Heart size={16} style={{ color: "#86A4E4" }} />
-              </div>
-              <p className="text-xs tracking-widest uppercase mb-3" style={{ fontFamily: "'Montserrat', sans-serif", color: "#6B7C9D" }}>
+              <p className="text-xs tracking-widest uppercase mb-3" style={{ fontFamily: "'Montserrat', sans-serif", color: "#6C8FB8" }}>
                 Bridesmaid
               </p>
-              <p className="text-xl font-medium" style={{ fontFamily: "'Cormorant Garamond', serif", color: "#1F2D4C", lineHeight: 1.25 }}>
+              <p className="text-xl font-medium" style={{ fontFamily: "'Cormorant Garamond', serif", color: "#1B3554", lineHeight: 1.25 }}>
                 {WEDDING_PARTY.find((p) => p.role === "Bridesmaid")?.name}
               </p>
             </GlassCard>
@@ -1666,19 +1638,18 @@ const inviteGuest = async (email: string, name?: string) => {
             <GlassCard
               className="w-full p-6 text-center relative transition-transform duration-300 hover:-translate-y-1 hover:shadow-xl"
               style={{
-                border: "1px solid rgba(66,117,200,0.18)",
-                background: "linear-gradient(135deg, rgba(233,243,255,0.97), rgba(245,250,255,0.96))",
+                background: "linear-gradient(145deg, #FFFFFF 0%, #EEF4FA 45%, #DCE7F3 100%)",
+                border: "1px solid rgba(213,224,236,0.9)",
+                backdropFilter: "blur(24px)",
+                boxShadow: "0 20px 60px rgba(108,143,184,0.12), inset 0 1px 0 rgba(255,255,255,0.8)",
               }}
             >
-              <div className="absolute -top-4 left-1/2 -translate-x-1/2 w-10 h-10 rounded-full flex items-center justify-center" style={{ background: "rgba(66,117,200,0.12)" }}>
-                <ChampagneIcon />
-              </div>
-              <p className="text-xs tracking-widest uppercase mb-3" style={{ fontFamily: "'Montserrat', sans-serif", color: "#6B7C9D" }}>
+              <p className="text-xs tracking-widest uppercase mb-3" style={{ fontFamily: "'Montserrat', sans-serif", color: "#6C8FB8" }}>
                 Groomsmen
               </p>
               <div className="space-y-2">
                 {WEDDING_PARTY.filter((p) => p.role === "Groomsmen").map((person) => (
-                  <p key={person.name} className="text-xl font-medium" style={{ fontFamily: "'Cormorant Garamond', serif", color: "#1F2D4C", lineHeight: 1.25 }}>
+                  <p key={person.name} className="text-xl font-medium" style={{ fontFamily: "'Cormorant Garamond', serif", color: "#1B3554", lineHeight: 1.25 }}>
                     {person.name}
                   </p>
                 ))}
@@ -1696,97 +1667,76 @@ const inviteGuest = async (email: string, name?: string) => {
 
       <div className="space-y-6">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          {SECONDARY_SPONSORS.filter((s) => ["Candle Sponsors", "Cord Sponsors", "Veil Sponsors"].includes(s.label)).map((s) => {
-            let IconComponent;
-            if (s.label === "Candle Sponsors") IconComponent = CandleIcon;
-            else if (s.label === "Cord Sponsors") IconComponent = CordIcon;
-            else if (s.label === "Veil Sponsors") IconComponent = VeilIcon;
-
-            return (
-              <GlassCard
-                key={s.label}
-                className="p-6 text-center relative transition-transform duration-300 hover:-translate-y-1 hover:shadow-lg"
-                style={{
-                  background: "linear-gradient(135deg, rgba(255,250,245,0.95), rgba(250,245,240,0.93))",
-                  border: "1px solid rgba(218,165,105,0.2)",
-                  boxShadow: "0 14px 30px rgba(198,124,78,0.08)",
-                }}
-              >
-                <div className="absolute -top-5 left-1/2 -translate-x-1/2 w-12 h-12 rounded-full flex items-center justify-center" style={{ background: "rgba(218,165,105,0.15)" }}>
-                  {IconComponent && <IconComponent />}
-                </div>
-                <p className="text-xs tracking-widest uppercase mb-3 mt-2" style={{ fontFamily: "'Montserrat', sans-serif", color: "#8B7C9D" }}>
-                  {s.label}
-                </p>
-                <div className="mx-auto mb-4 h-1 w-14 rounded-full" style={{ background: "linear-gradient(90deg, #D8A56A, #F0C5A0)" }} />
-                <div className="space-y-2">
-                  {s.names.map((name, idx) => (
-                    <p key={idx} className="text-lg" style={{ fontFamily: "'Cormorant Garamond', serif", color: "#1F2D4C" }}>
-                      {name}
-                    </p>
-                  ))}
-                </div>
-              </GlassCard>
-            );
-          })}
+          {SECONDARY_SPONSORS.filter((s) => ["Candle Sponsors", "Cord Sponsors", "Veil Sponsors"].includes(s.label)).map((s) => (
+            <GlassCard
+              key={s.label}
+              className="p-6 text-center relative transition-transform duration-300 hover:-translate-y-1 hover:shadow-lg"
+              style={{
+                background: "linear-gradient(145deg, #FFFFFF 0%, #EEF4FA 45%, #DCE7F3 100%)",
+                border: "1px solid rgba(213,224,236,0.9)",
+                backdropFilter: "blur(24px)",
+                boxShadow: "0 20px 60px rgba(108,143,184,0.12), inset 0 1px 0 rgba(255,255,255,0.8)",
+              }}
+            >
+              <p className="text-xs tracking-widest uppercase mb-3 mt-2" style={{ fontFamily: "'Montserrat', sans-serif", color: "#6C8FB8" }}>
+                {s.label}
+              </p>
+              <div className="mx-auto mb-4 h-1 w-14 rounded-full" style={{ background: "linear-gradient(90deg, #6C8FB8, #A8C7F1)" }} />
+              <div className="space-y-2">
+                {s.names.map((name, idx) => (
+                  <p key={idx} className="text-lg" style={{ fontFamily: "'Cormorant Garamond', serif", color: "#1B3554" }}>
+                    {name}
+                  </p>
+                ))}
+              </div>
+            </GlassCard>
+          ))}
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          {SECONDARY_SPONSORS.filter((s) => ["Ring Bearer", "Coin Bearer", "Bible Bearer", "Veil Bearer"].includes(s.label)).map((s) => {
-            let IconComponent;
-            if (s.label === "Ring Bearer") IconComponent = RingIcon;
-            else if (s.label === "Coin Bearer") IconComponent = CoinIcon;
-            else if (s.label === "Bible Bearer") IconComponent = BibleIcon;
-            else if (s.label === "Veil Bearer") IconComponent = VeilIcon;
-
-            return (
-              <GlassCard
-                key={s.label}
-                className="p-6 text-center relative transition-transform duration-300 hover:-translate-y-1 hover:shadow-lg"
-                style={{
-                  background: "linear-gradient(135deg, rgba(255,250,245,0.95), rgba(250,245,240,0.93))",
-                  border: "1px solid rgba(218,165,105,0.2)",
-                  boxShadow: "0 14px 30px rgba(198,124,78,0.08)",
-                }}
-              >
-                <div className="absolute -top-5 left-1/2 -translate-x-1/2 w-12 h-12 rounded-full flex items-center justify-center" style={{ background: "rgba(218,165,105,0.15)" }}>
-                  {IconComponent && <IconComponent />}
-                </div>
-                <p className="text-xs tracking-widest uppercase mb-3 mt-2" style={{ fontFamily: "'Montserrat', sans-serif", color: "#8B7C9D" }}>
-                  {s.label}
-                </p>
-                <div className="mx-auto mb-4 h-1 w-14 rounded-full" style={{ background: "linear-gradient(90deg, #D8A56A, #F0C5A0)" }} />
-                <div className="space-y-2">
-                  {s.names.map((name, idx) => (
-                    <p key={idx} className="text-lg" style={{ fontFamily: "'Cormorant Garamond', serif", color: "#1F2D4C" }}>
-                      {name}
-                    </p>
-                  ))}
-                </div>
-              </GlassCard>
-            );
-          })}
+          {SECONDARY_SPONSORS.filter((s) => ["Ring Bearer", "Coin Bearer", "Bible Bearer", "Veil Bearer"].includes(s.label)).map((s) => (
+            <GlassCard
+              key={s.label}
+              className="p-6 text-center relative transition-transform duration-300 hover:-translate-y-1 hover:shadow-lg"
+              style={{
+                background: "linear-gradient(145deg, #FFFFFF 0%, #EEF4FA 45%, #DCE7F3 100%)",
+                border: "1px solid rgba(213,224,236,0.9)",
+                backdropFilter: "blur(24px)",
+                boxShadow: "0 20px 60px rgba(108,143,184,0.12), inset 0 1px 0 rgba(255,255,255,0.8)",
+              }}
+            >
+              <p className="text-xs tracking-widest uppercase mb-3 mt-2" style={{ fontFamily: "'Montserrat', sans-serif", color: "#6C8FB8" }}>
+                {s.label}
+              </p>
+              <div className="mx-auto mb-4 h-1 w-14 rounded-full" style={{ background: "linear-gradient(90deg, #6C8FB8, #A8C7F1)" }} />
+              <div className="space-y-2">
+                {s.names.map((name, idx) => (
+                  <p key={idx} className="text-lg" style={{ fontFamily: "'Cormorant Garamond', serif", color: "#1B3554" }}>
+                    {name}
+                  </p>
+                ))}
+              </div>
+            </GlassCard>
+          ))}
         </div>
 
         <div className="grid grid-cols-1 gap-6">
           <GlassCard
             className="p-6 text-center relative transition-transform duration-300 hover:-translate-y-1 hover:shadow-lg"
             style={{
-              background: "linear-gradient(135deg, rgba(255,250,245,0.95), rgba(250,245,240,0.93))",
-              border: "1px solid rgba(218,165,105,0.2)",
-              boxShadow: "0 14px 30px rgba(198,124,78,0.08)",
+              background: "linear-gradient(145deg, #FFFFFF 0%, #EEF4FA 45%, #DCE7F3 100%)",
+              border: "1px solid rgba(213,224,236,0.9)",
+              backdropFilter: "blur(24px)",
+              boxShadow: "0 20px 60px rgba(108,143,184,0.12), inset 0 1px 0 rgba(255,255,255,0.8)",
             }}
           >
-            <div className="absolute -top-5 left-1/2 -translate-x-1/2 w-12 h-12 rounded-full flex items-center justify-center" style={{ background: "rgba(218,165,105,0.15)" }}>
-              <FlowerIcon />
-            </div>
-            <p className="text-xs tracking-widest uppercase mb-3 mt-2" style={{ fontFamily: "'Montserrat', sans-serif", color: "#8B7C9D" }}>
+            <p className="text-xs tracking-widest uppercase mb-3 mt-2" style={{ fontFamily: "'Montserrat', sans-serif", color: "#6C8FB8" }}>
               Flower Maidens
             </p>
-            <div className="mx-auto mb-4 h-1 w-14 rounded-full" style={{ background: "linear-gradient(90deg, #D8A56A, #F0C5A0)" }} />
+            <div className="mx-auto mb-4 h-1 w-14 rounded-full" style={{ background: "linear-gradient(90deg, #6C8FB8, #A8C7F1)" }} />
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-3 justify-items-center">
               {SECONDARY_SPONSORS.find((s) => s.label === "Flower Maidens")?.names.map((name, idx) => (
-                <p key={idx} className="text-lg" style={{ fontFamily: "'Cormorant Garamond', serif", color: "#1F2D4C" }}>
+                <p key={idx} className="text-lg" style={{ fontFamily: "'Cormorant Garamond', serif", color: "#1B3554" }}>
                   {name}
                 </p>
               ))}
@@ -1909,11 +1859,6 @@ const inviteGuest = async (email: string, name?: string) => {
             <div className="space-y-5 mt-16">
               {[
                 {
-                  question: "What is the dress code?",
-                  answer:
-                    "We kindly request our guests to wear formal or semi-formal attire in soft and elegant colors. Please avoid wearing white, ivory, or cream.",
-                },
-                {
                   question: "What time should I arrive?",
                   answer:
                     "We recommend arriving at least 30 minutes before the ceremony begins to allow time for seating and registration.",
@@ -1940,10 +1885,40 @@ const inviteGuest = async (email: string, name?: string) => {
                 },
                 {
                   question: "Where can I stay nearby?",
-                  answer:
-                    "For our beloved guests traveling from afar, we have prepared a list of nearby accommodations for your convenience. We kindly recommend booking your stay in advance.\n\n• Caliraya Heights Resorts & Events Place (3-5 minutes from the venue)\n• Caliraya Resort Club (8-10 minutes from the venue)\n• Mountain Lake Resort (10-15 minutes from the venue)\n• Baliraya Resort & Spa (8-12 minutes from the venue)",
+                  answer: (
+                    <>
+                      <p>
+                        For our beloved guests traveling from afar, we have prepared a list of nearby accommodations for your convenience. We kindly recommend booking your stay in advance.
+                      </p>
+                      <ul className="mt-4 list-disc pl-5 space-y-2 text-sm" style={{ color: "#5B6B84", fontFamily: "'Montserrat', sans-serif" }}>
+                        <li>
+                          <a href="https://www.google.com/maps/search/Caliraya+Heights+Resorts+%26+Events+Place" target="_blank" rel="noreferrer" className="underline text-slate-800">
+                            Caliraya Heights Resorts &amp; Events Place
+                          </a>
+                          {' '}– 3-5 minutes from the venue
+                        </li>
+                        <li>
+                          <a href="https://www.google.com/maps/search/Caliraya+Resort+Club" target="_blank" rel="noreferrer" className="underline text-slate-800">
+                            Caliraya Resort Club
+                          </a>
+                          {' '}– 8-10 minutes from the venue
+                        </li>
+                        <li>
+                          <a href="https://www.google.com/maps/search/Mountain+Lake+Resort" target="_blank" rel="noreferrer" className="underline text-slate-800">
+                            Mountain Lake Resort
+                          </a>
+                          {' '}– 10-15 minutes from the venue
+                        </li>
+                        <li>
+                          <a href="https://www.google.com/maps/search/Baliraya+Resort+%26+Spa" target="_blank" rel="noreferrer" className="underline text-slate-800">
+                            Baliraya Resort &amp; Spa
+                          </a>
+                          {' '}– 8-12 minutes from the venue
+                        </li>
+                      </ul>
+                    </>
+                  ),
                 },
-                
               ].map((faq, index) => (
                 <details
                   key={index}
@@ -1980,15 +1955,19 @@ const inviteGuest = async (email: string, name?: string) => {
                       }}
                     />
 
-                    <p
-                      className="leading-8 whitespace-pre-line"
-                      style={{
-                        color: "#5B6B84",
-                        fontFamily: "'Montserrat', sans-serif",
-                      }}
-                    >
-                      {faq.answer}
-                    </p>
+                    {typeof faq.answer === "string" ? (
+                      <p
+                        className="leading-8 whitespace-pre-line"
+                        style={{
+                          color: "#5B6B84",
+                          fontFamily: "'Montserrat', sans-serif",
+                        }}
+                      >
+                        {faq.answer}
+                      </p>
+                    ) : (
+                      <div>{faq.answer}</div>
+                    )}
                   </div>
                 </details>
               ))}
@@ -1999,7 +1978,7 @@ const inviteGuest = async (email: string, name?: string) => {
           {/* ── Footer ────────────────────────────────────────────── */}
           <footer className="text-center py-12 px-6" style={{ borderTop: "1px solid rgba(66,117,200,0.2)" }}>
             <p className="text-4xl mb-3" style={{ fontFamily: "'Great Vibes', cursive", color: "#4275C8" }}>{GROOM} &amp; {BRIDE}</p>
-            <p className="text-xs tracking-widest" style={{ fontFamily: "'Montserrat', sans-serif", color: "#9BB7E0", letterSpacing: "0.2em" }}>{DATE_DISPLAY.toUpperCase()}</p>
+            <p className="text-xs tracking-widest" style={{ fontFamily: "'Montserrat', sans-serif", color: "#9BB7E0", letterSpacing: "0.2em" }}></p>
             <motion.div animate={{ scale: [1, 1.2, 1] }} transition={{ duration: 2.5, repeat: Infinity, ease: "easeInOut" }} className="mt-4">
               <Heart size={14} fill="#86A4E4" style={{ color: "#86A4E4", margin: "0 auto" }} />
             </motion.div>

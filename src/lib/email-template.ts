@@ -1,388 +1,564 @@
-export function generateWeddingInvitationEmail(name: string, groomName: string, brideName: string, weddingDate: string): string {
-  const emailFrom = "Rogimer & Alyssa Camille";
+export function generateWeddingInvitationEmail(
+  name: string,
+  groomName: string,
+  brideName: string,
+  weddingDate: string
+): string {
+  const petal = (size: number, color: string) =>
+    `<svg width="${size}" height="${size * 1.3}" viewBox="0 0 20 26" xmlns="http://www.w3.org/2000/svg">
+      <path d="M10 0C10 0 20 8 20 16C20 21.5 15.5 26 10 26C4.5 26 0 21.5 0 16C0 8 10 0 10 0Z" fill="${color}"/>
+    </svg>`;
 
   return `
-    <!DOCTYPE html>
-    <html lang="en">
-    <head>
-      <meta charset="UTF-8" />
-      <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-      <title>Wedding Invitation</title>
-      <style>
-        * {
-          margin: 0;
-          padding: 0;
-          box-sizing: border-box;
-        }
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-        body {
-          font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-          line-height: 1.6;
-          color: #1f2d4c;
-          background: linear-gradient(135deg, #f0f4f8 0%, #e8ecf1 100%);
-          padding: 20px;
-        }
 
-        .email-container {
-          max-width: 600px;
-          margin: 0 auto;
-          background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
-          border: 1px solid rgba(107, 139, 184, 0.2);
-          border-radius: 16px;
-          overflow: hidden;
-          box-shadow: 0 10px 40px rgba(107, 139, 184, 0.15);
-        }
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Great+Vibes&family=Cormorant+Garamond:wght@400;500;600;700&display=swap');
+*{
+  margin:0;
+  padding:0;
+  box-sizing:border-box;
+}
 
-        /* Header with dusty blue gradient */
-        .email-header {
-          background: linear-gradient(135deg, #6B8BB8 0%, #7A9BC4 50%, #8BA7CE 100%);
-          padding: 40px 30px;
-          text-align: center;
-          position: relative;
-          overflow: hidden;
-        }
+body{
+  font-family:'Cormorant Garamond', Georgia, serif;
+  background: linear-gradient(180deg, #d8e6f1 0%, #eef5fb 55%, #f9fcff 100%);
+  padding:28px 18px;
+  color:#314860;
+}
 
-        .email-header::before {
-          content: '';
-          position: absolute;
-          top: -50%;
-          right: -10%;
-          width: 300px;
-          height: 300px;
-          background: rgba(255, 255, 255, 0.1);
-          border-radius: 50%;
-          filter: blur(40px);
-        }
+.email-container{
+  position:relative;
+  max-width:700px;
+  margin:auto;
+  background:#ebf4fc;
+  border-radius:36px;
+  overflow:hidden;
+  border:1px solid rgba(123,156,185,0.28);
+  box-shadow:0 24px 60px rgba(74,110,147,0.12);
+}
 
-        .email-header::after {
-          content: '';
-          position: absolute;
-          bottom: -30%;
-          left: -5%;
-          width: 250px;
-          height: 250px;
-          background: rgba(255, 255, 255, 0.05);
-          border-radius: 50%;
-          filter: blur(35px);
-        }
+/* STATIC PETALS */
 
-        .header-content {
-          position: relative;
-          z-index: 1;
-          color: white;
-        }
+.petal{
+  position:absolute;
+  opacity:.45;
+  z-index:1;
+}
 
-        .header-title {
-          font-size: 32px;
-          font-weight: 300;
-          margin-bottom: 8px;
-          letter-spacing: 1px;
-          font-family: 'Cormorant Garamond', serif;
-        }
+/* HEADER */
 
-        .header-subtitle {
-          font-size: 13px;
-          opacity: 0.95;
-          letter-spacing: 2px;
-          text-transform: uppercase;
-          font-weight: 500;
-        }
+.email-header{
+  position:relative;
+  overflow:hidden;
+  text-align:center;
 
-        .heart-divider {
-          margin: 16px 0 0 0;
-          font-size: 18px;
-          opacity: 0.9;
-        }
+  padding:78px 30px 56px;
 
-        /* Main content */
-        .email-body {
-          padding: 40px 30px;
-        }
+  background: linear-gradient(180deg, #d7e5f2 0%, #edf5fb 100%);
+}
 
-        .greeting {
-          font-size: 16px;
-          margin-bottom: 20px;
-          color: #2d3f5f;
-        }
+.email-header:before{
+  content:"";
+  position:absolute;
+  left:50%;
+  top:-140px;
+  transform:translateX(-50%);
 
-        .greeting strong {
-          color: #6B8BB8;
-          font-weight: 600;
-        }
+  width:520px;
+  height:520px;
 
-        .invitation-text {
-          margin: 24px 0;
-          line-height: 1.8;
-          color: #3d4f63;
-          font-size: 14px;
-        }
+  background: radial-gradient(circle, rgba(255,255,255,0.88), transparent 72%);
+}
 
-        .couple-names {
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          gap: 12px;
-          margin: 24px 0;
-          padding: 16px;
-          background: linear-gradient(135deg, rgba(107, 139, 184, 0.08) 0%, rgba(168, 184, 216, 0.08) 100%);
-          border-radius: 12px;
-          border-left: 4px solid #6B8BB8;
-        }
+.email-header:after{
+  content:"";
+  position:absolute;
+  inset:0;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.16), transparent);
+}
 
-        .couple-names .name {
-          font-size: 18px;
-          font-weight: 600;
-          color: #2d3f5f;
-          font-family: 'Cormorant Garamond', serif;
-        }
+.hero-image-wrap{
+  position:relative;
+  margin:0 auto 24px;
+  max-width:640px;
+  border-radius:28px;
+  overflow:hidden;
+  box-shadow:0 18px 40px rgba(75,112,144,0.08);
+}
 
-        .couple-names .ampersand {
-          color: #A8B8D8;
-          font-size: 20px;
-          font-weight: 300;
-        }
+.hero-image{
+  width:100%;
+  display:block;
+  height:auto;
+  object-fit:cover;
+}
 
-        .event-details {
-          margin: 32px 0;
-          padding: 24px;
-          background: linear-gradient(135deg, #f5f8fb 0%, #eef2f7 100%);
-          border-radius: 12px;
-          border: 1px solid rgba(107, 139, 184, 0.15);
-        }
+.header-content{
+  position:relative;
+  z-index:5;
+}
 
-        .event-details h3 {
-          font-size: 14px;
-          font-weight: 600;
-          color: #6B8BB8;
-          margin-bottom: 16px;
-          text-transform: uppercase;
-          letter-spacing: 1px;
-        }
+.corner{
+  position:absolute;
+  font-size:120px;
+  opacity:.18;
+  color:#7aa9dc;
+}
 
-        .detail-row {
-          display: flex;
-          align-items: center;
-          margin: 12px 0;
-          font-size: 14px;
-          color: #3d4f63;
-        }
+.corner-left{
+  top:-20px;
+  left:-15px;
+}
 
-        .detail-icon {
-          width: 20px;
-          height: 20px;
-          margin-right: 12px;
-          color: #6B8BB8;
-        }
+.corner-right{
+  top:-20px;
+  right:-15px;
+}
 
-        .cta-button {
-          display: inline-block;
-          background: linear-gradient(135deg, #6B8BB8 0%, #7A9BC4 100%);
-          color: white;
-          padding: 14px 32px;
-          border-radius: 8px;
-          text-decoration: none;
-          font-weight: 600;
-          font-size: 14px;
-          margin: 24px 0;
-          transition: all 0.3s ease;
-          box-shadow: 0 4px 15px rgba(107, 139, 184, 0.25);
-        }
+.monogram{
+  font-family:'Cormorant Garamond', Georgia, serif;
+  font-size:88px;
+  font-weight:400;
+  color:#8ea9cc;
+  line-height:1;
+  letter-spacing:2px;
+}
 
-        .cta-button:hover {
-          background: linear-gradient(135deg, #7A9BC4 0%, #8BA7CE 100%);
-          box-shadow: 0 6px 20px rgba(107, 139, 184, 0.35);
-        }
+.monogram .heart{
+  color:#aab6c5;
+  font-size:64px;
+  margin:0 10px;
+}
 
-        .divider {
-          height: 1px;
-          background: linear-gradient(90deg, transparent, rgba(107, 139, 184, 0.3), transparent);
-          margin: 32px 0;
-        }
+.header-subtitle{
+  margin-top:18px;
+  font-family:'Segoe UI',sans-serif;
+  font-size:11px;
+  letter-spacing:5px;
+  text-transform:uppercase;
+  color:#7f8895;
+}
 
-        .closing-text {
-          font-size: 14px;
-          color: #3d4f63;
-          line-height: 1.8;
-          margin: 20px 0;
-        }
+.header-title{
+  margin-top:22px;
+  font-family:'Great Vibes', cursive, 'Cormorant Garamond', Georgia, serif;
+  font-size:58px;
+  font-weight:600;
+  letter-spacing:1px;
+  color:#274464;
+  text-transform:uppercase;
+}
 
-        .signature {
-          font-size: 16px;
-          font-weight: 600;
-          color: #2d3f5f;
-          margin-top: 24px;
-          font-family: 'Cormorant Garamond', serif;
-        }
+.header-script{
+  margin-top:10px;
+  font-family:'Great Vibes', cursive, 'Cormorant Garamond', Georgia, serif;
+  font-size:28px;
+  font-style:italic;
+  color:#5d728e;
+}
 
-        .signature-subtitle {
-          font-size: 12px;
-          color: #6B8BB8;
-          margin-top: 4px;
-          letter-spacing: 1px;
-          text-transform: uppercase;
-        }
+.mini-divider{
+  margin-top:20px;
+  color:#8ea9cc;
+  letter-spacing:4px;
+}
 
-        /* Footer */
-        .email-footer {
-          background: linear-gradient(135deg, rgba(107, 139, 184, 0.05) 0%, rgba(168, 184, 216, 0.05) 100%);
-          padding: 24px 30px;
-          text-align: center;
-          border-top: 1px solid rgba(107, 139, 184, 0.1);
-        }
+/* BODY */
 
-        .footer-text {
-          font-size: 12px;
-          color: #6B7C9D;
-          margin: 8px 0;
-          line-height: 1.6;
-        }
+.email-body{
+  position:relative;
+  z-index:5;
+  padding:45px;
+}
 
-        .footer-divider {
-          height: 1px;
-          background: rgba(107, 139, 184, 0.15);
-          margin: 12px 0;
-        }
+.greeting{
+  font-size:22px;
+  color:#24466f;
+  margin-bottom:20px;
+}
 
-        .social-links {
-          margin-top: 12px;
-        }
+.greeting strong{
+  font-style:italic;
+}
 
-        .social-links a {
-          display: inline-block;
-          width: 32px;
-          height: 32px;
-          margin: 0 4px;
-          background: linear-gradient(135deg, #6B8BB8, #7A9BC4);
-          border-radius: 50%;
-          color: white;
-          text-align: center;
-          line-height: 32px;
-          font-size: 14px;
-          text-decoration: none;
-          transition: all 0.3s ease;
-        }
+.invitation-text{
+  font-family:'Segoe UI',sans-serif;
+  color:#5c6f86;
+  font-size:15px;
+  line-height:1.9;
+  margin:20px 0;
+}
 
-        .social-links a:hover {
-          background: linear-gradient(135deg, #7A9BC4, #8BA7CE);
-          transform: translateY(-2px);
-        }
+/* COUPLE CARD */
 
-        @media (max-width: 600px) {
-          .email-container {
-            border-radius: 8px;
-          }
+.couple-names{
+  position:relative;
+  margin:40px 0;
+  padding:45px 30px;
+  border-radius:20px;
+  background:
+    linear-gradient(
+      180deg,
+      #f8fbff,
+      #edf5fc
+    );
 
-          .email-header {
-            padding: 30px 20px;
-          }
+  border:1px solid #e1ebf5;
+  box-shadow:
+    0 8px 20px rgba(126,167,215,.08);
 
-          .header-title {
-            font-size: 24px;
-          }
+  text-align:center;
+}
 
-          .email-body,
-          .email-footer {
-            padding: 24px 20px;
-          }
+.name{
+  display:block;
+  font-size:48px;
+  color:#7297c5;
+  font-style:normal;
+}
 
-          .couple-names {
-            flex-direction: column;
-            gap: 8px;
-          }
+.ampersand{
+  display:block;
+  margin:14px 0;
+  font-size:26px;
+  font-style:italic;
+  color:#9099a6;
+}
 
-          .detail-row {
-            align-items: flex-start;
-          }
+/* DETAILS */
 
-          .detail-icon {
-            margin-top: 2px;
-          }
-        }
-      </style>
-    </head>
-    <body>
-      <div class="email-container">
-        <!-- Header -->
-        <div class="email-header">
-          <div class="header-content">
-            <div class="header-title">You're Invited</div>
-            <div class="heart-divider">💕</div>
-            <div class="header-subtitle">Join us for a celebration of love</div>
-          </div>
-        </div>
+.event-details{
+  background:#f7faff;
+  border:1px solid #e3ebf5;
+  border-radius:18px;
+  padding:30px;
+  margin:40px 0;
+  box-shadow:
+    0 5px 15px rgba(126,167,215,.05);
+}
 
-        <!-- Body -->
-        <div class="email-body">
-          <div class="greeting">Dear <strong>${name}</strong>,</div>
+.details-grid{
+  display:flex;
+  justify-content:space-around;
+  align-items:center;
+  text-align:center;
+}
 
-          <p class="invitation-text">
-            With heartfelt joy and gratitude, we cordially invite you to witness and celebrate the sacred union of
-          </p>
+.details-item{
+  flex:1;
+}
 
-          <div class="couple-names">
-            <span class="name">Rogimer</span>
-            <span class="ampersand">&</span>
-            <span class="name">Alyssa Camille</span>
-          </div>
+.details-separator{
+  width:1px;
+  height:60px;
+  background:#dfe7f2;
+}
 
-          <p class="invitation-text">
-            as they exchange vows and begin their journey together. Your presence would mean the world to us as we
-            celebrate this beautiful milestone with loved ones and cherished friends.
-          </p>
+.details-icon{
+  font-size:24px;
+  margin-bottom:10px;
+}
 
-          <!-- Event Details -->
-          <div class="event-details">
-            <h3>📅 Wedding Details</h3>
-            <div class="detail-row">
-              <span class="detail-icon">📆</span>
-              <span><strong>Saturday, November 28, 2026</strong> at 4:00 PM</span>
-            </div>
-            <div class="detail-row">
-              <span class="detail-icon">📍</span>
-              <span>Details will be shared shortly</span>
-            </div>
-          </div>
+.details-value{
+  color:#6f88a9;
+  font-size:16px;
+}
 
-          <p class="invitation-text">
-            We look forward to celebrating this special day with you. Please visit our wedding website to RSVP and
-            share your meal preferences.
-          </p>
+/* BUTTON */
 
-          <center>
-            <a href="https://rogie-alyssa.wedding" class="cta-button">
-              RSVP & View Details
-            </a>
-          </center>
+.cta-button{
+  display:inline-block;
+  padding:16px 46px;
 
-          <div class="divider"></div>
+  background: linear-gradient(180deg, #5f8bc5, #3b6295);
 
-          <p class="closing-text">
-            Thank you for being part of our lives and for the love and support you've shown us. We cannot wait to
-            celebrate with you!
-          </p>
+  color:#fff;
+  text-decoration:none;
+  border-radius:999px;
 
-          <div class="signature">
-            With love,
-            <div class="signature-subtitle">Rogimer & Alyssa Camille</div>
-          </div>
-        </div>
+  font-family:'Segoe UI',sans-serif;
+  font-size:12px;
+  letter-spacing:0.15em;
+  text-transform:uppercase;
 
-        <!-- Footer -->
-        <div class="email-footer">
-          <div class="footer-text">Wedding Date: Saturday, November 28, 2026</div>
-          <div class="footer-divider"></div>
-          <div class="footer-text">
-            This is an automated invitation. Please do not reply to this email.<br />
-            For inquiries, please contact us through our wedding website.
-          </div>
-          <div class="social-links">
-            <a href="#" title="Facebook">f</a>
-            <a href="#" title="Instagram">📷</a>
-            <a href="#" title="Email">✉</a>
-          </div>
-        </div>
+  box-shadow: 0 12px 28px rgba(36,82,129,.2);
+}
+
+.floating-petal{
+  position:absolute;
+  width:22px;
+  height:30px;
+
+  background:
+    linear-gradient(
+      145deg,
+      #ffffff,
+      #dfeefb
+    );
+
+  border-radius:
+    60% 40%
+    70% 30% /
+    40% 60%
+    40% 60%;
+
+  opacity:.75;
+
+  box-shadow:
+    0 4px 10px rgba(0,0,0,.06);
+
+  z-index:2;
+}
+
+.p1{top:90px;left:25px;transform:rotate(25deg);}
+.p2{top:150px;right:30px;transform:rotate(-20deg);}
+.p3{top:430px;left:30px;transform:rotate(40deg);}
+.p4{top:620px;right:40px;transform:rotate(-35deg);}
+.p5{bottom:320px;left:60px;transform:rotate(30deg);}
+.p6{bottom:220px;right:50px;transform:rotate(-40deg);}
+.p7{bottom:100px;left:30px;transform:rotate(50deg);}
+.p8{bottom:80px;right:40px;transform:rotate(-60deg);}
+
+/* CLOSING */
+
+.divider{
+  height:1px;
+  background:#dbeaf7;
+  margin:40px 0 30px;
+}
+
+.closing-text{
+  text-align:center;
+
+  font-family:'Segoe UI',sans-serif;
+
+  color:#5c6f86;
+  line-height:1.9;
+}
+
+.signature{
+  margin-top:25px;
+
+  text-align:center;
+
+  font-family:'Great Vibes', cursive, Georgia, serif;
+  font-size:34px;
+  font-style:normal;
+
+  color:#2f67ae;
+}
+
+.signature-subtitle{
+  margin-top:12px;
+
+  font-family:'Segoe UI',sans-serif;
+
+  color:#5f88b6;
+
+  font-size:11px;
+  letter-spacing:3px;
+  text-transform:uppercase;
+}
+
+/* FOOTER */
+
+.email-footer{
+  position:relative;
+
+  padding:30px;
+
+  text-align:center;
+
+  background:#f6fbff;
+  border-top:1px solid #dbeaf7;
+}
+
+.footer-text{
+  font-family:'Segoe UI',sans-serif;
+  font-size:11px;
+  color:#7b8fa6;
+  line-height:1.8;
+}
+
+@media(max-width:600px){
+
+  .email-body{
+    padding:25px;
+  }
+
+  .header-title{
+    font-size:48px;
+  }
+
+  .monogram{
+    font-size:62px;
+  }
+
+  .name{
+    font-size:30px;
+  }
+}
+</style>
+</head>
+
+<body>
+
+
+
+<div class="email-container">
+
+  <!-- STATIC PETALS -->
+
+  <div class="petal" style="top:80px;left:20px;transform:rotate(25deg)">
+    ${petal(18,"#bdd7f3")}
+  </div>
+
+  <div class="petal" style="top:160px;right:25px;transform:rotate(-35deg)">
+    ${petal(20,"#d2e4f7")}
+  </div>
+
+  <div class="petal" style="top:420px;left:35px;transform:rotate(50deg)">
+    ${petal(16,"#bdd7f3")}
+  </div>
+
+  <div class="petal" style="top:620px;right:60px;transform:rotate(-15deg)">
+    ${petal(22,"#d2e4f7")}
+  </div>
+
+  <div class="petal" style="bottom:200px;left:80px;transform:rotate(30deg)">
+    ${petal(20,"#c2d7ee")}
+  </div>
+
+  <div class="petal" style="bottom:80px;right:50px;transform:rotate(-45deg)">
+    ${petal(24,"#d2e4f7")}
+  </div>
+
+  <!-- HEADER -->
+
+  <div class="email-header">
+
+
+    <div class="header-content">
+
+  <div class="monogram">
+    R<span class="heart">♡</span>A
+  </div>
+
+  <div class="header-subtitle">
+    TOGETHER WITH JOY
+  </div>
+
+  <div class="header-title">
+    YOU'RE INVITED
+  </div>
+
+  <div class="header-script">
+    to our wedding
+  </div>
+
+  <div class="mini-divider">
+    ─── ♥ ───
+  </div>
+</div>
+
+  <!-- BODY -->
+
+  <div class="email-body">
+
+    <div class="greeting">
+      Dear <strong>${name}</strong>,
+    </div>
+
+    <p class="invitation-text">
+      With heartfelt joy and gratitude, we invite you
+      to witness and celebrate the beginning of our forever.
+    </p>
+
+
+    <p class="invitation-text">
+      As we exchange vows and begin our new journey together,
+      your presence would mean the world to us.
+      We would be honored to celebrate this special day
+      surrounded by the people we cherish most.
+    </p>
+
+    <div class="event-details">
+
+      <h3>
+        Wedding Details
+      </h3>
+
+      <div class="detail-row">
+        ${weddingDate} • 3:30 PM
       </div>
-    </body>
-    </html>
-  `;
+
+      <div class="detail-row muted">
+        Venue details will be shared shortly
+      </div>
+
+    </div>
+
+    <p class="invitation-text" style="text-align:center;">
+      Please visit our wedding website to RSVP
+      and share your meal preferences.
+    </p>
+
+    <div class="cta-wrap">
+
+      <center><a
+        href="https://rogiealyssawedding.vercel.app/"
+        class="cta-button">
+        RSVP & VIEW DETAILS
+      </a></center>
+
+    </div>
+
+    <div class="divider"></div>
+
+    <p class="closing-text">
+      Thank you for being part of our lives and
+      for the love you've shown us.<br>
+      We cannot wait to celebrate this unforgettable
+      moment with you.
+    </p>
+
+    <div class="signature">
+
+      With Love, ♡
+
+      <div class="signature-subtitle">
+        ${groomName} &amp; ${brideName}
+      </div>
+
+    </div>
+
+  </div>
+
+  <!-- FOOTER -->
+
+  <div class="email-footer">
+
+    <div class="footer-text">
+      Wedding Date • ${weddingDate}
+    </div>
+
+    <div class="footer-text">
+      This is an automated invitation — please don't reply
+      to this email.<br>
+      For inquiries, please visit our wedding website.
+    </div>
+
+  </div>
+
+</div>
+
+</body>
+</html>
+`;
 }

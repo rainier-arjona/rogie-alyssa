@@ -1,3 +1,4 @@
+
 import { supabase } from "./supabase";
 
 export type RsvpStatus = "confirmed" | "pending" | "declined";
@@ -73,6 +74,21 @@ export async function updateRsvpStatus(id: number, status: RsvpStatus): Promise<
   }
 }
 
+export async function updateRsvpAttending(id: number, attending: string, status: RsvpStatus): Promise<boolean> {
+  try {
+    const { error } = await supabase
+      .from("rsvps")
+      .update({ attending, status })
+      .eq("id", id);
+
+    if (error) throw error;
+    return true;
+  } catch (error) {
+    console.error("Error updating RSVP attending/status:", error);
+    return false;
+  }
+}
+
 export async function deleteRsvp(id: number): Promise<boolean> {
   try {
     const { error } = await supabase.from("rsvps").delete().eq("id", id);
@@ -99,6 +115,8 @@ export async function updateRsvpInvited(id: number, invited: boolean): Promise<b
 
 // ─── Email Invitations ───────────────────────────────────────────────────────────
 
+import { generateWeddingInvitationEmail } from "./email-template";
+
 export interface InvitationResult {
   success: boolean;
   error?: string;
@@ -108,26 +126,20 @@ export async function sendInvitationEmail(email: string, name: string): Promise<
   try {
     console.log(`📧 Attempting to send invitation to ${email}...`);
 
-    const { data, error } = await supabase.functions.invoke("send-invitation", {
-      body: {
-        email,
-        name,
-        weddingDate: "November 28, 2026",
-        groomName: "Rogimer",
-        brideName: "Alyssa Camille",
-      },
+    const html = generateWeddingInvitationEmail(name, "Rogimer", "Alyssa Camille", "November 28, 2026");
+
+    const { data, error } = await supabase.functions.invoke("sendinvites", {
+      body: { email, name, html },
     });
 
     if (error) {
-      const message = error.message || "Edge function request failed";
-      console.error("❌ Edge Function Error:", error);
-      return { success: false, error: message };
+      console.error("❌ Edge function error:", error);
+      return { success: false, error: error.message || "Failed to send invitation." };
     }
 
     if (data?.success === false) {
-      const message = data.error || "Email service error";
-      console.error("❌ Email Send Failed:", message);
-      return { success: false, error: message };
+      console.error("❌ Resend Error:", data.error);
+      return { success: false, error: data.error };
     }
 
     console.log("✅ Email sent successfully:", data);
@@ -135,7 +147,6 @@ export async function sendInvitationEmail(email: string, name: string): Promise<
   } catch (error) {
     const message = error instanceof Error ? error.message : String(error);
     console.error("❌ Error sending invitation email:", error);
-    console.error("Details:", message);
     return { success: false, error: message };
   }
 }
