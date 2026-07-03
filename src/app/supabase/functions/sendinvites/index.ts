@@ -59,12 +59,16 @@ Deno.serve(async (req: Request) => {
       },
     });
 
+    const subject = typeof body?.subject === "string" && body.subject.trim().length > 0
+      ? body.subject
+      : "💌 You're Invited to Our Wedding Celebration";
+
     let info;
     try {
       info = await transporter.sendMail({
         from: `"Rogimer & Alyssa Camille" <${gmailUser}>`,
         to: email,
-        subject: "💌 You're Invited to Our Wedding Celebration",
+        subject,
         html,
       });
     } catch (sendError) {

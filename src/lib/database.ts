@@ -115,7 +115,7 @@ export async function updateRsvpInvited(id: number, invited: boolean): Promise<b
 
 // ─── Email Invitations ───────────────────────────────────────────────────────────
 
-import { generateWeddingInvitationEmail } from "./email-template";
+import { generateWeddingInvitationEmail, generateRsvpConfirmationEmail, generateRsvpDeclineEmail } from "./email-template";
 
 export interface InvitationResult {
   success: boolean;
@@ -147,6 +147,70 @@ export async function sendInvitationEmail(email: string, name: string): Promise<
   } catch (error) {
     const message = error instanceof Error ? error.message : String(error);
     console.error("❌ Error sending invitation email:", error);
+    return { success: false, error: message };
+  }
+}
+
+export async function sendConfirmationEmail(email: string, name: string): Promise<InvitationResult> {
+  try {
+    console.log(`📧 Sending RSVP confirmation to ${email}...`);
+    const html = generateRsvpConfirmationEmail(name, "Rogimer", "Alyssa Camille", "November 28, 2026");
+    const { data, error } = await supabase.functions.invoke("sendinvites", {
+      body: {
+        email,
+        name,
+        html,
+        subject: "Your RSVP is Confirmed for Rogimer & Alyssa",
+      },
+    });
+
+    if (error) {
+      console.error("❌ Edge function error:", error);
+      return { success: false, error: error.message || "Failed to send confirmation email." };
+    }
+
+    if (data?.success === false) {
+      console.error("❌ Confirmation send error:", data.error);
+      return { success: false, error: data.error };
+    }
+
+    console.log("✅ RSVP confirmation sent successfully:", data);
+    return { success: true };
+  } catch (error) {
+    const message = error instanceof Error ? error.message : String(error);
+    console.error("❌ Error sending RSVP confirmation email:", error);
+    return { success: false, error: message };
+  }
+}
+
+export async function sendDeclineEmail(email: string, name: string): Promise<InvitationResult> {
+  try {
+    console.log(`📧 Sending RSVP decline acknowledgement to ${email}...`);
+    const html = generateRsvpDeclineEmail(name, "Rogimer", "Alyssa Camille", "November 28, 2026");
+    const { data, error } = await supabase.functions.invoke("sendinvites", {
+      body: {
+        email,
+        name,
+        html,
+        subject: "Your RSVP has been received for Rogimer & Alyssa",
+      },
+    });
+
+    if (error) {
+      console.error("❌ Edge function error:", error);
+      return { success: false, error: error.message || "Failed to send decline acknowledgement email." };
+    }
+
+    if (data?.success === false) {
+      console.error("❌ Decline acknowledgement send error:", data.error);
+      return { success: false, error: data.error };
+    }
+
+    console.log("✅ RSVP decline acknowledgement sent successfully:", data);
+    return { success: true };
+  } catch (error) {
+    const message = error instanceof Error ? error.message : String(error);
+    console.error("❌ Error sending RSVP decline acknowledgement email:", error);
     return { success: false, error: message };
   }
 }

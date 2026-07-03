@@ -7,7 +7,7 @@ import {
   CheckCircle, XCircle, Clock3, LayoutDashboard, LogOut, Eye,
   Mail, UserCheck, UserX, RefreshCw, User,
 } from "lucide-react";
-import { fetchRsvps, createRsvp, updateRsvpStatus, updateRsvpAttending, deleteRsvp as deleteRsvpDb, markAsInvited } from "../lib/database";
+import { fetchRsvps, createRsvp, updateRsvpStatus, updateRsvpAttending, deleteRsvp as deleteRsvpDb, markAsInvited, sendConfirmationEmail, sendDeclineEmail } from "../lib/database";
 
 // ─── Constants ────────────────────────────────────────────────────────────────
 
@@ -904,6 +904,29 @@ export default function App() {
               : r
           )
         );
+
+        if (status === "confirmed" && existing.status !== "confirmed") {
+          const confirmationResult = await sendConfirmationEmail(normalizedEmail, entry.name || existing.name);
+          if (!confirmationResult.success) {
+            console.error("Confirmation email failed to send:", confirmationResult.error);
+            setError(
+              confirmationResult.error
+                ? `Confirmation email failed: ${confirmationResult.error}`
+                : "Confirmation email failed to send. Please try again later."
+            );
+          }
+        }
+        if (status === "declined" && existing.status !== "declined") {
+          const declineResult = await sendDeclineEmail(normalizedEmail, entry.name || existing.name);
+          if (!declineResult.success) {
+            console.error("Decline acknowledgement email failed:", declineResult.error);
+            setError(
+              declineResult.error
+                ? `Email failed: ${declineResult.error}`
+                : "Acknowledgement email failed to send. Please try again later."
+            );
+          }
+        }
       } else {
         // Create new
         const result = await createRsvp(dbEntry);
@@ -921,6 +944,29 @@ export default function App() {
             invited: result.invited,
           };
           setRsvps((prev) => [newEntry, ...prev]);
+
+          if (status === "confirmed") {
+            const confirmationResult = await sendConfirmationEmail(result.email, result.name);
+            if (!confirmationResult.success) {
+              console.error("Confirmation email failed to send:", confirmationResult.error);
+              setError(
+                confirmationResult.error
+                  ? `Confirmation email failed: ${confirmationResult.error}`
+                  : "Confirmation email failed to send. Please try again later."
+              );
+            }
+          }
+          if (status === "declined") {
+            const declineResult = await sendDeclineEmail(result.email, result.name);
+            if (!declineResult.success) {
+              console.error("Decline acknowledgement email failed:", declineResult.error);
+              setError(
+                declineResult.error
+                  ? `Email failed: ${declineResult.error}`
+                  : "Acknowledgement email failed to send. Please try again later."
+              );
+            }
+          }
         }
       }
     } catch (err) {
