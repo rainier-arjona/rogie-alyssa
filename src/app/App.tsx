@@ -1446,89 +1446,42 @@ const inviteGuest = async (email: string, name?: string) => {
     transition={{ duration: 0.8 }}
     className="max-w-4xl mx-auto relative z-10"
   >
-    <GlassCard
-      className="p-12 relative overflow-hidden"
-      style={{
-        background:
-          "linear-gradient(145deg, #FFFFFF 0%, #EEF4FA 45%, #DCE7F3 100%)",
-        border: "1px solid rgba(213,224,236,0.9)",
-        backdropFilter: "blur(24px)",
-        boxShadow:
-          "0 20px 60px rgba(108,143,184,0.12), inset 0 1px 0 rgba(255,255,255,0.8)",
-      }}
-    >
-      {/* Shimmer */}
-      <div
-        className="absolute inset-0 opacity-20"
-        style={{
-          background:
-            "linear-gradient(120deg, transparent 30%, rgba(255,255,255,0.7) 50%, transparent 70%)",
-          animation: "sponsorShine 8s linear infinite",
-        }}
-      />
-
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-10 relative z-10">
-        <motion.div
-          initial={{ opacity: 0, y: 15 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.6 }}
-          className="space-y-4 text-center"
-        >
-          {PRINCIPAL_SPONSORS.map((s, i) => (
-            <p key={`mr-${i}`} className="text-xl" style={{ fontFamily: "'Cormorant Garamond', serif", color: "#1B3554", lineHeight: 1.4 }}>
-              {s.mr}
-            </p>
-          ))}
-        </motion.div>
-
-        <motion.div
-          initial={{ opacity: 0, y: 15 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.6, delay: 0.1 }}
-          className="space-y-4 text-center"
-        >
-          {PRINCIPAL_SPONSORS.map((s, i) => (
-            <p key={`mrs-${i}`} className="text-xl" style={{ fontFamily: "'Cormorant Garamond', serif", color: "#1B3554", lineHeight: 1.4 }}>
-              {s.mrs}
-            </p>
-          ))}
-        </motion.div>
-      </div>
-
-      {/* Footer */}
-      <div
-        className="mt-12 pt-8 border-t relative z-10"
-        style={{
-          borderColor: "rgba(156,180,205,0.20)",
-        }}
+    <div className="grid grid-cols-1 sm:grid-cols-2 gap-10 relative z-10">
+      <motion.div
+        initial={{ opacity: 0, y: 15 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true }}
+        transition={{ duration: 0.6 }}
+        className="space-y-4 text-center"
       >
-        <p
-          className="text-center text-sm"
-          style={{
-            fontFamily: "'Montserrat', sans-serif",
-            color: "#7B8FA8",
-            lineHeight: 1.8,
-          }}
-        >
-          With heartfelt gratitude for the unwavering support and blessings
-          that made this celebration possible.
-        </p>
-      </div>
-    </GlassCard>
-  </motion.div>
+        {PRINCIPAL_SPONSORS.map((s, i) => (
+          <p key={`mr-${i}`} className="text-xl" style={{ fontFamily: "'Cormorant Garamond', serif", color: "#1B3554", lineHeight: 1.4 }}>
+            {s.mr}
+          </p>
+        ))}
+      </motion.div>
 
-  <style>{`
-    @keyframes sponsorShine {
-      from {
-        transform: translateX(-150%);
-      }
-      to {
-        transform: translateX(150%);
-      }
-    }
-  `}</style>
+      <motion.div
+        initial={{ opacity: 0, y: 15 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true }}
+        transition={{ duration: 0.6, delay: 0.1 }}
+        className="space-y-4 text-center"
+      >
+        {PRINCIPAL_SPONSORS.map((s, i) => (
+          <p key={`mrs-${i}`} className="text-xl" style={{ fontFamily: "'Cormorant Garamond', serif", color: "#1B3554", lineHeight: 1.4 }}>
+            {s.mrs}
+          </p>
+        ))}
+      </motion.div>
+    </div>
+
+    <div className="mt-12 pt-8 border-t relative z-10" style={{ borderColor: "rgba(156,180,205,0.20)" }}>
+      <p className="text-center text-sm" style={{ fontFamily: "'Montserrat', sans-serif", color: "#7B8FA8", lineHeight: 1.8 }}>
+        With heartfelt gratitude for the unwavering support and blessings that made this celebration possible.
+      </p>
+    </div>
+  </motion.div>
 </div>
 
     {/* Secondary Sponsors */}
@@ -1536,212 +1489,125 @@ const inviteGuest = async (email: string, name?: string) => {
       <div className="text-center" />
 
       <div className="space-y-8">
-        <div className="grid grid-cols-1 gap-6 justify-items-center">
+        <div className="grid grid-cols-1 gap-6 justify-items-center text-center">
           <div className="w-full max-w-sm">
-            <GlassCard
-              className="w-full p-6 text-center relative transition-transform duration-300 hover:-translate-y-1 hover:shadow-xl"
-              style={{
-                background: "linear-gradient(145deg, #FFFFFF 0%, #EEF4FA 45%, #DCE7F3 100%)",
-                border: "1px solid rgba(213,224,236,0.9)",
-                backdropFilter: "blur(24px)",
-                boxShadow: "0 20px 60px rgba(108,143,184,0.12), inset 0 1px 0 rgba(255,255,255,0.8)",
-              }}
-            >
+            <div className="py-4">
               <p className="text-xs tracking-widest uppercase mb-3" style={{ fontFamily: "'Montserrat', sans-serif", color: "#6C8FB8" }}>
                 Best Man
               </p>
               <p className="text-xl font-medium" style={{ fontFamily: "'Cormorant Garamond', serif", color: "#1B3554", lineHeight: 1.25 }}>
                 {WEDDING_PARTY.find((p) => p.role === "Best Man")?.name}
               </p>
-            </GlassCard>
-          </div>
-
-          <div className="grid w-full max-w-2xl grid-cols-1 gap-6 md:grid-cols-2 justify-items-center">
-            <div className="w-full max-w-sm">
-              <GlassCard
-                className="w-full p-6 text-center relative transition-transform duration-300 hover:-translate-y-1 hover:shadow-xl"
-                style={{
-                  background: "linear-gradient(145deg, #FFFFFF 0%, #EEF4FA 45%, #DCE7F3 100%)",
-                  border: "1px solid rgba(213,224,236,0.9)",
-                  backdropFilter: "blur(24px)",
-                  boxShadow: "0 20px 60px rgba(108,143,184,0.12), inset 0 1px 0 rgba(255,255,255,0.8)",
-                }}
-              >
-                <p className="text-xs tracking-widest uppercase mb-3" style={{ fontFamily: "'Montserrat', sans-serif", color: "#6C8FB8" }}>
-                  Maid of Honor
-                </p>
-                <p className="text-xl font-medium" style={{ fontFamily: "'Cormorant Garamond', serif", color: "#1B3554", lineHeight: 1.25 }}>
-                  {WEDDING_PARTY.find((p) => p.role === "Maid of Honor")?.name}
-                </p>
-              </GlassCard>
-            </div>
-
-            <div className="w-full max-w-sm">
-              <GlassCard
-                className="w-full p-6 text-center relative transition-transform duration-300 hover:-translate-y-1 hover:shadow-xl"
-                style={{
-                  background: "linear-gradient(145deg, #FFFFFF 0%, #EEF4FA 45%, #DCE7F3 100%)",
-                  border: "1px solid rgba(213,224,236,0.9)",
-                  backdropFilter: "blur(24px)",
-                  boxShadow: "0 20px 60px rgba(108,143,184,0.12), inset 0 1px 0 rgba(255,255,255,0.8)",
-                }}
-              >
-                <p className="text-xs tracking-widest uppercase mb-3" style={{ fontFamily: "'Montserrat', sans-serif", color: "#6C8FB8" }}>
-                  Matron of Honor
-                </p>
-                <p className="text-xl font-medium" style={{ fontFamily: "'Cormorant Garamond', serif", color: "#1B3554", lineHeight: 1.25 }}>
-                  {WEDDING_PARTY.find((p) => p.role === "Matron of Honor")?.name}
-                </p>
-              </GlassCard>
             </div>
           </div>
 
-          <div className="w-full max-w-sm mx-auto">
-            <GlassCard
-              className="w-full p-6 text-center relative transition-transform duration-300 hover:-translate-y-1 hover:shadow-xl"
-              style={{
-                background: "linear-gradient(145deg, #FFFFFF 0%, #EEF4FA 45%, #DCE7F3 100%)",
-                border: "1px solid rgba(213,224,236,0.9)",
-                backdropFilter: "blur(24px)",
-                boxShadow: "0 20px 60px rgba(108,143,184,0.12), inset 0 1px 0 rgba(255,255,255,0.8)",
-              }}
-            >
+          <div className="grid w-full max-w-2xl grid-cols-1 gap-6 md:grid-cols-2">
+            <div className="py-4 text-center">
               <p className="text-xs tracking-widest uppercase mb-3" style={{ fontFamily: "'Montserrat', sans-serif", color: "#6C8FB8" }}>
-                Junior Bridesmaid
+                Maid of Honor
               </p>
               <p className="text-xl font-medium" style={{ fontFamily: "'Cormorant Garamond', serif", color: "#1B3554", lineHeight: 1.25 }}>
-                {WEDDING_PARTY.find((p) => p.role === "Junior Bridesmaid")?.name}
+                {WEDDING_PARTY.find((p) => p.role === "Maid of Honor")?.name}
               </p>
-            </GlassCard>
-          </div>
+            </div>
 
-          <div className="w-full max-w-sm mx-auto">
-            <GlassCard
-              className="w-full p-6 text-center relative transition-transform duration-300 hover:-translate-y-1 hover:shadow-xl"
-              style={{
-                background: "linear-gradient(145deg, #FFFFFF 0%, #EEF4FA 45%, #DCE7F3 100%)",
-                border: "1px solid rgba(213,224,236,0.9)",
-                backdropFilter: "blur(24px)",
-                boxShadow: "0 20px 60px rgba(108,143,184,0.12), inset 0 1px 0 rgba(255,255,255,0.8)",
-              }}
-            >
+            <div className="py-4 text-center">
               <p className="text-xs tracking-widest uppercase mb-3" style={{ fontFamily: "'Montserrat', sans-serif", color: "#6C8FB8" }}>
-                Bridesmaid
+                Matron of Honor
               </p>
               <p className="text-xl font-medium" style={{ fontFamily: "'Cormorant Garamond', serif", color: "#1B3554", lineHeight: 1.25 }}>
-                {WEDDING_PARTY.find((p) => p.role === "Bridesmaid")?.name}
+                {WEDDING_PARTY.find((p) => p.role === "Matron of Honor")?.name}
               </p>
-            </GlassCard>
+            </div>
           </div>
 
-          <div className="w-full max-w-sm mx-auto">
-            <GlassCard
-              className="w-full p-6 text-center relative transition-transform duration-300 hover:-translate-y-1 hover:shadow-xl"
-              style={{
-                background: "linear-gradient(145deg, #FFFFFF 0%, #EEF4FA 45%, #DCE7F3 100%)",
-                border: "1px solid rgba(213,224,236,0.9)",
-                backdropFilter: "blur(24px)",
-                boxShadow: "0 20px 60px rgba(108,143,184,0.12), inset 0 1px 0 rgba(255,255,255,0.8)",
-              }}
-            >
-              <p className="text-xs tracking-widest uppercase mb-3" style={{ fontFamily: "'Montserrat', sans-serif", color: "#6C8FB8" }}>
-                Groomsmen
-              </p>
-              <div className="space-y-2">
-                {WEDDING_PARTY.filter((p) => p.role === "Groomsmen").map((person) => (
-                  <p key={person.name} className="text-xl font-medium" style={{ fontFamily: "'Cormorant Garamond', serif", color: "#1B3554", lineHeight: 1.25 }}>
-                    {person.name}
-                  </p>
-                ))}
-              </div>
-            </GlassCard>
-          </div>
-        </div>
-      </div>
-
-      <div className="text-center pt-6">
-        <p className="text-xs tracking-widest uppercase" style={{ fontFamily: "'Montserrat', sans-serif", color: "#6B7C9D" }}>
-          Secondary Sponsors
-        </p>
-      </div>
-
-      <div className="space-y-6">
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          {SECONDARY_SPONSORS.filter((s) => ["Candle Sponsors", "Cord Sponsors", "Veil Sponsors"].includes(s.label)).map((s) => (
-            <GlassCard
-              key={s.label}
-              className="p-6 text-center relative transition-transform duration-300 hover:-translate-y-1 hover:shadow-lg"
-              style={{
-                background: "linear-gradient(145deg, #FFFFFF 0%, #EEF4FA 45%, #DCE7F3 100%)",
-                border: "1px solid rgba(213,224,236,0.9)",
-                backdropFilter: "blur(24px)",
-                boxShadow: "0 20px 60px rgba(108,143,184,0.12), inset 0 1px 0 rgba(255,255,255,0.8)",
-              }}
-            >
-              <p className="text-xs tracking-widest uppercase mb-3 mt-2" style={{ fontFamily: "'Montserrat', sans-serif", color: "#6C8FB8" }}>
-                {s.label}
-              </p>
-              <div className="mx-auto mb-4 h-1 w-14 rounded-full" style={{ background: "linear-gradient(90deg, #6C8FB8, #A8C7F1)" }} />
-              <div className="space-y-2">
-                {s.names.map((name, idx) => (
-                  <p key={idx} className="text-lg" style={{ fontFamily: "'Cormorant Garamond', serif", color: "#1B3554" }}>
-                    {name}
-                  </p>
-                ))}
-              </div>
-            </GlassCard>
-          ))}
-        </div>
-
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          {SECONDARY_SPONSORS.filter((s) => ["Ring Bearer", "Coin Bearer", "Bible Bearer", "Veil Bearer"].includes(s.label)).map((s) => (
-            <GlassCard
-              key={s.label}
-              className="p-6 text-center relative transition-transform duration-300 hover:-translate-y-1 hover:shadow-lg"
-              style={{
-                background: "linear-gradient(145deg, #FFFFFF 0%, #EEF4FA 45%, #DCE7F3 100%)",
-                border: "1px solid rgba(213,224,236,0.9)",
-                backdropFilter: "blur(24px)",
-                boxShadow: "0 20px 60px rgba(108,143,184,0.12), inset 0 1px 0 rgba(255,255,255,0.8)",
-              }}
-            >
-              <p className="text-xs tracking-widest uppercase mb-3 mt-2" style={{ fontFamily: "'Montserrat', sans-serif", color: "#6C8FB8" }}>
-                {s.label}
-              </p>
-              <div className="mx-auto mb-4 h-1 w-14 rounded-full" style={{ background: "linear-gradient(90deg, #6C8FB8, #A8C7F1)" }} />
-              <div className="space-y-2">
-                {s.names.map((name, idx) => (
-                  <p key={idx} className="text-lg" style={{ fontFamily: "'Cormorant Garamond', serif", color: "#1B3554" }}>
-                    {name}
-                  </p>
-                ))}
-              </div>
-            </GlassCard>
-          ))}
-        </div>
-
-        <div className="grid grid-cols-1 gap-6">
-          <GlassCard
-            className="p-6 text-center relative transition-transform duration-300 hover:-translate-y-1 hover:shadow-lg"
-            style={{
-              background: "linear-gradient(145deg, #FFFFFF 0%, #EEF4FA 45%, #DCE7F3 100%)",
-              border: "1px solid rgba(213,224,236,0.9)",
-              backdropFilter: "blur(24px)",
-              boxShadow: "0 20px 60px rgba(108,143,184,0.12), inset 0 1px 0 rgba(255,255,255,0.8)",
-            }}
-          >
-            <p className="text-xs tracking-widest uppercase mb-3 mt-2" style={{ fontFamily: "'Montserrat', sans-serif", color: "#6C8FB8" }}>
-              Flower Maidens
+          <div className="w-full max-w-sm mx-auto py-4 text-center">
+            <p className="text-xs tracking-widest uppercase mb-3" style={{ fontFamily: "'Montserrat', sans-serif", color: "#6C8FB8" }}>
+              Junior Bridesmaid
             </p>
-            <div className="mx-auto mb-4 h-1 w-14 rounded-full" style={{ background: "linear-gradient(90deg, #6C8FB8, #A8C7F1)" }} />
-            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-3 justify-items-center">
-              {SECONDARY_SPONSORS.find((s) => s.label === "Flower Maidens")?.names.map((name, idx) => (
-                <p key={idx} className="text-lg" style={{ fontFamily: "'Cormorant Garamond', serif", color: "#1B3554" }}>
-                  {name}
+            <p className="text-xl font-medium" style={{ fontFamily: "'Cormorant Garamond', serif", color: "#1B3554", lineHeight: 1.25 }}>
+              {WEDDING_PARTY.find((p) => p.role === "Junior Bridesmaid")?.name}
+            </p>
+          </div>
+
+          <div className="w-full max-w-sm mx-auto py-4 text-center">
+            <p className="text-xs tracking-widest uppercase mb-3" style={{ fontFamily: "'Montserrat', sans-serif", color: "#6C8FB8" }}>
+              Bridesmaid
+            </p>
+            <p className="text-xl font-medium" style={{ fontFamily: "'Cormorant Garamond', serif", color: "#1B3554", lineHeight: 1.25 }}>
+              {WEDDING_PARTY.find((p) => p.role === "Bridesmaid")?.name}
+            </p>
+          </div>
+
+          <div className="w-full max-w-sm mx-auto py-4 text-center">
+            <p className="text-xs tracking-widest uppercase mb-3" style={{ fontFamily: "'Montserrat', sans-serif", color: "#6C8FB8" }}>
+              Groomsmen
+            </p>
+            <div className="space-y-2">
+              {WEDDING_PARTY.filter((p) => p.role === "Groomsmen").map((person) => (
+                <p key={person.name} className="text-xl font-medium" style={{ fontFamily: "'Cormorant Garamond', serif", color: "#1B3554", lineHeight: 1.25 }}>
+                  {person.name}
                 </p>
               ))}
             </div>
-          </GlassCard>
+          </div>
+        </div>
+
+        <div className="text-center pt-6">
+          <p className="text-xs tracking-widest uppercase" style={{ fontFamily: "'Montserrat', sans-serif", color: "#6B7C9D" }}>
+            Secondary Sponsors
+          </p>
+        </div>
+
+        <div className="space-y-6">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            {SECONDARY_SPONSORS.filter((s) => ["Candle Sponsors", "Cord Sponsors", "Veil Sponsors"].includes(s.label)).map((s) => (
+              <div key={s.label} className="text-center py-4">
+                <p className="text-xs tracking-widest uppercase mb-3" style={{ fontFamily: "'Montserrat', sans-serif", color: "#6C8FB8" }}>
+                  {s.label}
+                </p>
+                <div className="space-y-2">
+                  {s.names.map((name, idx) => (
+                    <p key={idx} className="text-lg" style={{ fontFamily: "'Cormorant Garamond', serif", color: "#1B3554" }}>
+                      {name}
+                    </p>
+                  ))}
+                </div>
+              </div>
+            ))}
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            {SECONDARY_SPONSORS.filter((s) => ["Ring Bearer", "Coin Bearer", "Bible Bearer", "Veil Bearer"].includes(s.label)).map((s) => (
+              <div key={s.label} className="text-center py-4">
+                <p className="text-xs tracking-widest uppercase mb-3" style={{ fontFamily: "'Montserrat', sans-serif", color: "#6C8FB8" }}>
+                  {s.label}
+                </p>
+                <div className="space-y-2">
+                  {s.names.map((name, idx) => (
+                    <p key={idx} className="text-lg" style={{ fontFamily: "'Cormorant Garamond', serif", color: "#1B3554" }}>
+                      {name}
+                    </p>
+                  ))}
+                </div>
+              </div>
+            ))}
+          </div>
+
+          <div className="grid grid-cols-1 gap-6">
+            <div className="text-center py-4">
+              <p className="text-xs tracking-widest uppercase mb-3" style={{ fontFamily: "'Montserrat', sans-serif", color: "#6C8FB8" }}>
+                Flower Maidens
+              </p>
+              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-3 justify-items-center">
+                {SECONDARY_SPONSORS.find((s) => s.label === "Flower Maidens")?.names.map((name, idx) => (
+                  <p key={idx} className="text-lg" style={{ fontFamily: "'Cormorant Garamond', serif", color: "#1B3554" }}>
+                    {name}
+                  </p>
+                ))}
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </div>
