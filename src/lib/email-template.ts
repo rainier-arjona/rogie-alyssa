@@ -502,7 +502,7 @@ body{
       </div>
 
       <div class="detail-row muted">
-        Venue details will be shared shortly
+        Venue: Spacio Caliraya, Lumban, Laguna
       </div>
 
     </div>
