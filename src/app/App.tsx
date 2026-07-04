@@ -2105,8 +2105,15 @@ const inviteGuest = async (email: string, name?: string) => {
                 },
                 {
                   question: "Can I bring a plus one?",
-                  answer:
-                    "Due to venue capacity, only guests named on the invitation are invited to attend. Thank you for understanding.",
+                  answer: (
+                    <>
+                      Due to venue capacity,{" "}
+                      <strong className="font-bold text-slate-800">
+                        only guests named on the invitation are invited to attend
+                      </strong>
+                      . Thank you for understanding.
+                    </>
+                  ),
                 },
                 {
                   question: "Will there be parking available?",
