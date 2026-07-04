@@ -1621,7 +1621,7 @@ const inviteGuest = async (email: string, name?: string) => {
                 </p>
                 <div className="space-y-2">
                   {s.names.map((name, idx) => (
-                    <p key={idx} className="text-lg" style={{ fontFamily: "'Cormorant Garamond', serif", color: "#1B3554" }}>
+                    <p key={idx} className="text-xl font-medium" style={{ fontFamily: "'Cormorant Garamond', serif", color: "#1B3554" }}>
                       {name}
                     </p>
                   ))}
@@ -1638,7 +1638,7 @@ const inviteGuest = async (email: string, name?: string) => {
                 </p>
                 <div className="space-y-2">
                   {s.names.map((name, idx) => (
-                    <p key={idx} className="text-lg" style={{ fontFamily: "'Cormorant Garamond', serif", color: "#1B3554" }}>
+                    <p key={idx} className="text-xl font-medium" style={{ fontFamily: "'Cormorant Garamond', serif", color: "#1B3554" }}>
                       {name}
                     </p>
                   ))}
@@ -1654,7 +1654,7 @@ const inviteGuest = async (email: string, name?: string) => {
               </p>
               <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-3 justify-items-center">
                 {SECONDARY_SPONSORS.find((s) => s.label === "Flower Maidens")?.names.map((name, idx) => (
-                  <p key={idx} className="text-lg" style={{ fontFamily: "'Cormorant Garamond', serif", color: "#1B3554" }}>
+                  <p key={idx} className="text-xl font-medium" style={{ fontFamily: "'Cormorant Garamond', serif", color: "#1B3554" }}>
                     {name}
                   </p>
                 ))}
