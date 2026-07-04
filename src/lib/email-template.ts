@@ -147,7 +147,7 @@ body{
 
 .header-title{
   margin-top:22px;
-  font-family:'Great Vibes', cursive, 'Cormorant Garamond', Georgia, serif;
+  font-family:'Cormorant Garamond', Georgia, serif;
   font-size:58px;
   font-weight:600;
   letter-spacing:1px;

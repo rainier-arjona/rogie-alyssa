@@ -9,6 +9,7 @@ import {
 } from "lucide-react";
 import { fetchRsvps, createRsvp, updateRsvpStatus, updateRsvpAttending, deleteRsvp as deleteRsvpDb, markAsInvited, sendConfirmationEmail, sendDeclineEmail } from "../lib/database";
 
+
 // ─── Constants ────────────────────────────────────────────────────────────────
 
 const WEDDING_DATE = new Date("2026-11-28T16:00:00");
@@ -1363,7 +1364,13 @@ const inviteGuest = async (email: string, name?: string) => {
         transform: translateX(100%);
       }
     }
-  `}</style>
+  `}
+
+     
+  
+  
+  
+  </style>
 </section>
 
           
@@ -1660,21 +1667,366 @@ const inviteGuest = async (email: string, name?: string) => {
   </div>
 </section>
 
+
+
           {/* ── Attire ────────────────────────────────────────────── */}
-          <section id="attire" className="py-24 px-6">
-            <div className="max-w-4xl mx-auto">
-              <SectionHeader script="Dress to Celebrate" title= "Entourage" subtitle="Please dress in these colours to complement our celebration" />
-              
-              <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.8 }} className="mb-12 rounded-2xl overflow-hidden" style={{ boxShadow: "0 8px 32px rgba(66,117,200,0.2)" }}>
-                <img src="/images/wedding-entourage.JPEG" alt="Wedding Entourage" className="w-full h-auto object-cover" />
-              </motion.div>
-              <SectionHeader script="" title="Our Dear Guests" subtitle="Smart casual to semi-formal styling suggestions" />
-           
-              <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.8 }} className="mb-12 rounded-2xl overflow-hidden" style={{ boxShadow: "0 8px 32px rgba(66,117,200,0.2)" }}>
-                <img src="/images/guest-attire.JPEG" alt="Guest Attire Guide" className="w-full h-auto object-cover" />
-              </motion.div>
+        {/* ===================== ENTIRE ATTIRE SECTION ===================== */}
+      <section id="attire" className="py-24 px-6">
+  <div className="max-w-7xl mx-auto">
+
+    {/* Entourage Header */}
+    <SectionHeader
+      script="Dress to Celebrate"
+      title="Entourage"
+      subtitle="Please dress in these colours to complement our celebration"
+    />
+
+    {/* Main Entourage Guide */}
+    <motion.div
+      initial={{ opacity: 0, y: 20 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true }}
+      transition={{ duration: 0.8 }}
+      className="mb-16 rounded-2xl overflow-hidden"
+      style={{ boxShadow: "0 8px 32px rgba(66,117,200,0.2)" }}
+    >
+      {/* Optional hero image */}
+    </motion.div>
+
+    {/* Individual Attire */}
+    <motion.div
+      initial={{ opacity: 0, y: 20 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true }}
+      transition={{ duration: 0.8 }}
+      className="mb-20"
+    >
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+
+        {/* Mothers */}
+        <div className="bg-white rounded-2xl shadow-lg overflow-hidden flex flex-col h-[620px]">
+          <div className="h-[420px] bg-gray-50 flex items-center justify-center p-4">
+            <img
+              src="/images/entourage-images/mother1.png"
+              alt="Mothers"
+              className="max-w-full max-h-full object-contain"
+            />
+            <img
+              src="/images/entourage-images/mother2.png"
+              alt="Mothers"
+              className="max-w-full max-h-full object-contain"
+            />
+          </div>
+
+          <div className="p-5 text-center flex flex-col flex-grow">
+            <h4 className="font-semibold text-lg mb-4">
+              Mothers
+            </h4>
+
+            <div className="flex justify-center mb-3">
+              <div
+                className="w-12 h-12 rounded-full border-2 border-gray-200"
+                style={{ backgroundColor: "#1F3A5F" }}
+              />
             </div>
-          </section>
+
+            <p className="text-sm text-gray-600 mt-auto">
+              Navy Blue
+            </p>
+          </div>
+        </div>
+
+        {/* Fathers */}
+        <div className="bg-white rounded-2xl shadow-lg overflow-hidden flex flex-col h-[620px]">
+          <div className="h-[420px] bg-gray-50 flex items-center justify-center p-4">
+            <img
+              src="/images/entourage-images/father1.png"
+              alt="Fathers"
+              className="max-w-full max-h-full object-contain"
+            />
+            <img
+              src="/images/entourage-images/father2.png"
+              alt="Fathers"
+              className="max-w-full max-h-full object-contain"
+            />
+          </div>
+
+          <div className="p-5 text-center flex flex-col flex-grow">
+            <h4 className="font-semibold text-lg mb-4">
+              Fathers
+            </h4>
+
+            <div className="flex justify-center mb-3">
+              <div
+                className="w-12 h-12 rounded-full border-2 border-gray-200"
+                style={{ backgroundColor: "#D6C3A5" }}
+              />
+            </div>
+
+            <p className="text-sm text-gray-600 mt-auto">
+              Beige
+            </p>
+          </div>
+        </div>
+
+        {/* Male Principal Sponsors */}
+        <div className="bg-white rounded-2xl shadow-lg overflow-hidden flex flex-col h-[620px]">
+          <div className="h-[420px] bg-gray-50 flex items-center justify-center p-4">
+            <img
+              src="/images/entourage-images/N1.png"
+              alt="Male Principal Sponsors"
+              className="max-w-full max-h-full object-contain"
+            />
+            <img
+              src="/images/entourage-images/N2.png"
+              alt="Male Principal Sponsors"
+              className="max-w-full max-h-full object-contain"
+            />
+          </div>
+
+          <div className="p-5 text-center flex flex-col flex-grow">
+            <h4 className="font-semibold text-lg mb-4">
+              Male Principal Sponsors
+            </h4>
+
+            <div className="flex justify-center gap-2 mb-3">
+              <div
+                className="w-12 h-12 rounded-full border"
+                style={{ backgroundColor: "#D6C3A5" }}
+              />
+              <div
+                className="w-12 h-12 rounded-full border"
+                style={{ backgroundColor: "#808080" }}
+              />
+            </div>
+
+            <p className="text-sm text-gray-600 mt-auto">
+              Beige • Gray
+            </p>
+          </div>
+        </div>
+
+        {/* Female Principal Sponsors */}
+        <div className="bg-white rounded-2xl shadow-lg overflow-hidden flex flex-col h-[620px]">
+          <div className="h-[420px] bg-gray-50 flex items-center justify-center p-4">
+            <img
+              src="/images/entourage-images/ni1.png"
+              alt="Female Principal Sponsors"
+              className="max-w-full max-h-full object-contain"
+            />
+            <img
+              src="/images/entourage-images/ni2.png"
+              alt="Female Principal Sponsors"
+              className="max-w-full max-h-full object-contain"
+            />
+          </div>
+
+          <div className="p-5 text-center flex flex-col flex-grow">
+            <h4 className="font-semibold text-lg mb-4">
+              Female Principal Sponsors
+            </h4>
+
+            <div className="flex justify-center gap-2 mb-3">
+              <div
+                className="w-12 h-12 rounded-full border"
+                style={{ backgroundColor: "#D6C3A5" }}
+              />
+              <div
+                className="w-12 h-12 rounded-full border"
+                style={{ backgroundColor: "#808080" }}
+              />
+            </div>
+
+            <p className="text-sm text-gray-600 mt-auto">
+              Beige • Gray
+            </p>
+          </div>
+        </div>
+
+        {/* Bridesmaids */}
+        <div className="bg-white rounded-2xl shadow-lg overflow-hidden flex flex-col h-[620px]">
+          <div className="h-[420px] bg-gray-50 flex items-center justify-center p-4">
+            <img
+              src="/images/entourage-images/b1.png"
+              alt="Bridesmaids"
+              className="max-w-full max-h-full object-contain"
+            />
+            <img
+              src="/images/entourage-images/b3.png"
+              alt="Bridesmaids"
+              className="max-w-full max-h-full object-contain"
+            />
+          </div>
+
+          <div className="p-5 text-center flex flex-col flex-grow">
+            <h4 className="font-semibold text-lg mb-4">
+              Bridesmaids / Female Secondary Sponsors
+            </h4>
+
+            <div className="flex justify-center mb-3">
+              <div
+                className="w-12 h-12 rounded-full border"
+                style={{ backgroundColor: "#8FA7C6" }}
+              />
+            </div>
+
+            <p className="text-sm text-gray-600 mt-auto">
+              Dusty Blue
+            </p>
+          </div>
+        </div>
+
+        {/* Groomsmen */}
+        <div className="bg-white rounded-2xl shadow-lg overflow-hidden flex flex-col h-[620px]">
+          <div className="h-[420px] bg-gray-50 flex items-center justify-center p-4">
+            <img
+              src="/images/entourage-images/g1.png"
+              alt="Groomsmen"
+              className="max-w-full max-h-full object-contain"
+            />
+            <img
+              src="/images/entourage-images/g2.png"
+              alt="Groomsmen"
+              className="max-w-full max-h-full object-contain"
+            />
+          </div>
+
+          <div className="p-5 text-center flex flex-col flex-grow">
+            <h4 className="font-semibold text-lg mb-4">
+              Groomsmen / Male Secondary Sponsors
+            </h4>
+
+            <div className="flex justify-center gap-2 mb-3">
+              <div
+                className="w-12 h-12 rounded-full border"
+                style={{ backgroundColor: "#D6C3A5" }}
+              />
+            </div>
+
+            <p className="text-sm text-gray-600 mt-auto">
+              Beige • Black
+            </p>
+          </div>
+        </div>
+
+        {/* Flower Maidens */}
+        <div className="bg-white rounded-2xl shadow-lg overflow-hidden flex flex-col h-[620px]">
+          <div className="h-[420px] bg-gray-50 flex items-center justify-center p-4">
+            <img
+              src="/images/entourage-images/m1.png"
+              alt="Flower Maidens"
+              className="max-w-full max-h-full object-contain"
+            />
+            <img
+              src="/images/entourage-images/m2.png"
+              alt="Flower Maidens"
+              className="max-w-full max-h-full object-contain"
+            />
+          </div>
+
+          <div className="p-5 text-center flex flex-col flex-grow">
+            <h4 className="font-semibold text-lg mb-4">
+              Flower Maidens
+            </h4>
+
+            <div className="flex justify-center mb-3">
+              <div
+                className="w-12 h-12 rounded-full border"
+                style={{ backgroundColor: "#BFD7EA" }}
+              />
+            </div>
+
+            <p className="text-sm text-gray-600 mt-auto">
+              Powder Blue
+            </p>
+          </div>
+        </div>
+
+        {/* Bearers */}
+        <div className="bg-white rounded-2xl shadow-lg overflow-hidden flex flex-col h-[620px]">
+          <div className="h-[420px] bg-gray-50 flex items-center justify-center p-4">
+            <img
+              src="/images/entourage-images/kids.png"
+              alt="Bearers"
+              className="max-w-full max-h-full object-contain"
+            />
+            <img
+              src="/images/entourage-images/kids2.png"
+              alt="Bearers"
+              className="max-w-full max-h-full object-contain"
+            />
+          </div>
+
+          <div className="p-5 text-center flex flex-col flex-grow">
+            <h4 className="font-semibold text-lg mb-4">
+              Bearers
+            </h4>
+
+            <div className="flex justify-center mb-3">
+              <div
+                className="w-12 h-12 rounded-full border"
+                style={{ backgroundColor: "#D6C3A5" }}
+              />
+            </div>
+
+            <p className="text-sm text-gray-600 mt-auto">
+              Beige
+            </p>
+          </div>
+        </div>
+
+      </div>
+    </motion.div>
+
+
+
+          {/* Guest Attire */}
+          <SectionHeader
+            script=""
+            title="Our Dear Guests"
+            subtitle="Smart casual to semi-formal styling suggestions"
+          />
+
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.8 }}
+            className="rounded-2xl overflow-hidden"
+            style={{ boxShadow: "0 8px 32px rgba(66,117,200,0.2)" }}
+          >
+            <img
+              src="/images/guest-attire.JPEG"
+              alt="Guest Attire Guide"
+              className="w-full h-auto object-cover"
+            />
+          </motion.div>
+
+
+            {/* Guest Attire */}
+            <SectionHeader
+              script=""
+              title="Our Dear Guests"
+              subtitle="Smart casual to semi-formal styling suggestions"
+            />
+
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.8 }}
+              className="mb-12 rounded-2xl overflow-hidden"
+              style={{ boxShadow: "0 8px 32px rgba(66,117,200,0.2)" }}
+            >
+              <img
+                src="/images/guest-attire.JPEG"
+                alt="Guest Attire Guide"
+                className="w-full h-auto object-cover"
+              />
+            </motion.div>
+
+          </div>
+        </section>
 
           {/* ── Ceremony & Reception ──────────────────────────────── */}
           <section id="ceremony" className="py-12 px-6">
