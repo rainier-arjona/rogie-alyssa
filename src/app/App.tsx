@@ -61,7 +61,7 @@ const WEDDING_PARTY = [
 
 const SECONDARY_SPONSORS = [
   { label: "Candle Sponsors", names: ["Mark Laurence A. Lat", "Marinelle R. Silvania"] },
-  { label: "Cord Sponsors", names: ["Roberto O. Ubatay Jr.", "Abigael D. Subiela"] },
+  { label: "Cord Sponsors", names: ["Roberto O. Ubatay Jr.", "Abigael A. Subiela"] },
   { label: "Veil Sponsors", names: ["Mark Leynard D. Villaran", "Kendall Jeane J. Puno"] },
   { label: "Ring Bearer", names: ["Lucas Tyler C. Delos Santos"] },
   { label: "Coin Bearer", names: ["Aiden Ray U. Aguinaldo"] },
