@@ -1978,32 +1978,6 @@ const inviteGuest = async (email: string, name?: string) => {
       </div>
     </motion.div>
 
-                <br>
-                </br>
-
-
-          {/* Guest Attire */}
-          <SectionHeader
-            script=""
-            title="Our Dear Guests"
-            subtitle="Smart casual to semi-formal styling suggestions"
-          />
-
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.8 }}
-            className="rounded-2xl overflow-hidden"
-            style={{ boxShadow: "0 8px 32px rgba(66,117,200,0.2)" }}
-          >
-            <img
-              src="/images/guest-attire.JPEG"
-              alt="Guest Attire Guide"
-              className="w-full h-auto object-cover"
-            />
-          </motion.div>
-
 
             {/* Guest Attire */}
             <SectionHeader
