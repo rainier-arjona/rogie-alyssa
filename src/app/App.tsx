@@ -1652,7 +1652,7 @@ const inviteGuest = async (email: string, name?: string) => {
               <p className="text-xs tracking-widest uppercase mb-3" style={{ fontFamily: "'Montserrat', sans-serif", color: "#6C8FB8" }}>
                 Flower Maidens
               </p>
-              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-3 justify-items-center">
+              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-1 gap-3 justify-items-center">
                 {SECONDARY_SPONSORS.find((s) => s.label === "Flower Maidens")?.names.map((name, idx) => (
                   <p key={idx} className="text-xl font-medium" style={{ fontFamily: "'Cormorant Garamond', serif", color: "#1B3554" }}>
                     {name}
@@ -1999,6 +1999,23 @@ const inviteGuest = async (email: string, name?: string) => {
                 alt="Guest Attire Guide"
                 className="w-full h-auto object-cover"
               />
+            </motion.div>
+
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.8, delay: 0.2 }}
+              className="max-w-3xl mx-auto text-center bg-white/70 backdrop-blur-sm rounded-xl p-6 border border-gray-200"
+            >
+              <p className="text-gray-700 leading-relaxed">
+                <span className="font-semibold">Kindly observe our requested dress code. </span>
+                 We respectfully ask our dear guests to avoid wearing
+                <span className="font-semibold"> shades of blue, gray, and beige</span>,
+                as these colors have been reserved exclusively for our
+                entourage and immediate families. Thank you for helping us
+                create a beautifully coordinated celebration.
+              </p>
             </motion.div>
 
           </div>
