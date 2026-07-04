@@ -1978,6 +1978,8 @@ const inviteGuest = async (email: string, name?: string) => {
       </div>
     </motion.div>
 
+                <br>
+                </br>
 
 
           {/* Guest Attire */}
