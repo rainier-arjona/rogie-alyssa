@@ -1418,6 +1418,8 @@ const inviteGuest = async (email: string, name?: string) => {
     <p className="text-xl" style={{ fontFamily: "'Cormorant Garamond', serif", color: "#1F2D4C", lineHeight: 1.3 }}>
       Mrs. Melita F. Cabardo
     </p>
+    
+    
   </div>
 </div>
 
@@ -1658,6 +1660,17 @@ const inviteGuest = async (email: string, name?: string) => {
                     {name}
                   </p>
                 ))}
+              </div>
+
+              <div>
+                <br></br>
+                <br></br>
+                <p className="text-xs tracking-[0.35em] uppercase mb-3" style={{ fontFamily: "'Montserrat', sans-serif", color: "#6B7C9D" }}>
+                  Officiating Pastor
+                </p>
+                <p className="text-xl" style={{ fontFamily: "'Cormorant Garamond', serif", color: "#1F2D4C", lineHeight: 1.3 }}>
+                  Ptr. Ronaldo D. Mecija
+                </p>
               </div>
             </div>
           </div>
