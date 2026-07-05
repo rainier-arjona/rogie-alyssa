@@ -47,7 +47,7 @@ const PRINCIPAL_SPONSORS = [
   { mr: "Mr. Ireneo R. Baldovino", mrs: "Mrs. Shirley A. Corsiga", role: "Principal Sponsors" },
   { mr: "Mr. Rommel T. Gadaza", mrs: "Mrs. Melinda R. Gadaza", role: "Principal Sponsors" },
   { mr: "Mr. Ariel D. Añonuevo", mrs: "Mrs. Amor A. Ceblano", role: "Principal Sponsors" },
-  { mr: "Mr. Camilo B. Acerdano", mrs: "Mrs. Maria Sirikit D. Wallace", role: "Principal Sponsors" },
+  { mr: "Mr. Camilo B. Acerdano", mrs: "Mrs. Maria Sirikit B. Wallace", role: "Principal Sponsors" },
 ];
 const WEDDING_PARTY = [
   { name: "Kevin Clester B. Arjona", role: "Best Man" },
