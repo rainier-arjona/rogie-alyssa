@@ -44,7 +44,7 @@ const PRINCIPAL_SPONSORS = [
   { mr: "Mr. Gerry D. Paule", mrs: "Mrs. Aline D. Paule", role: "Principal Sponsors" },
   { mr: "Mr. John David S. Supsupin", mrs: "Mrs. Joyce J. Supsupin", role: "Principal Sponsors" },
   { mr: "Mr. Ireneo D. Centeno III", mrs: "Mrs. Susan M. Centeno", role: "Principal Sponsors" },
-  { mr: "Mr. Ireneo R. Baldovino", mrs: "Mrs. Shirley A. Corsiga", role: "Principal Sponsors" },
+  { mr: "Hon. Ireneo R. Baldovino", mrs: "Mrs. Shirley A. Corsiga", role: "Principal Sponsors" },
   { mr: "Mr. Rommel T. Gadaza", mrs: "Mrs. Melinda R. Gadaza", role: "Principal Sponsors" },
   { mr: "Mr. Ariel D. Añonuevo", mrs: "Mrs. Amor A. Ceblano", role: "Principal Sponsors" },
   { mr: "Mr. Camilo B. Acerdano", mrs: "Mrs. Maria Sirikit B. Wallace", role: "Principal Sponsors" },
