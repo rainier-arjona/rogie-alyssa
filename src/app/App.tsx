@@ -2024,7 +2024,7 @@ const inviteGuest = async (email: string, name?: string) => {
               <p className="text-gray-700 leading-relaxed">
                 <span className="font-semibold">Kindly observe our requested dress code. </span>
                  We respectfully ask our dear guests to avoid wearing
-                <span className="font-semibold"> shades of blue, gray, and beige</span>,
+                <span className="font-semibold"> shades of blue and gray</span>,
                 as these colors have been reserved exclusively for our
                 entourage and immediate families. Thank you for helping us
                 create a beautifully coordinated celebration.
