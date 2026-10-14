@@ -29,7 +29,7 @@ interface GalleryItem {
 }
 
 const GALLERY: GalleryItem[] = [
-  { url: "/images/1a.jpg", alt: "Couple portrait", span: "lg:col-span-2 lg:row-span-2" },
+  { url: "/images/1a.jpg", alt: "Couple portraits", span: "lg:col-span-2 lg:row-span-2" },
   { url: "/images/4a.JPG", alt: "Smiling guests", span: "lg:col-span-1 lg:row-span-1" },
   { url: "/images/5a.JPG", alt: "Ceremony moment", span: "lg:col-span-1 lg:row-span-1" },
   { url: "/images/5b.JPG", alt: "Ceremony moment", span: "lg:col-span-1 lg:row-span-1" },
